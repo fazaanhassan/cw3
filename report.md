@@ -1,5 +1,5 @@
 ## COMP0019 CW3 Grade Report
-Report for commit SHA: 0b6be24ad4b7fdb05f88aa447cf0761e1a78c8c9
+Report for commit SHA: b4dcf43030fc907c9e9d27c9e5a41ab2ed4665b9
 
 ### Output
 
@@ -44,12 +44,21 @@ Report for commit SHA: 0b6be24ad4b7fdb05f88aa447cf0761e1a78c8c9
     [  7%] Building C object CMakeFiles/gene_encode.dir/src/comp0019lib.c.o
     [ 14%] Building C object CMakeFiles/gene_encode.dir/src/comp0019.c.o
     /home/user/src/comp0019.c: In function 'Encode':
-    /home/user/src/comp0019.c:3:19: warning: unused parameter 'in_file' [-Wunused-parameter]
-     void Encode(FILE* in_file, FILE* out_file) {
+    /home/user/src/comp0019.c:166:19: warning: comparison is always false due to limited range of data type [-Wtype-limits]
+       if (myByteValue == EOF) return;
                        ^
-    /home/user/src/comp0019.c:3:34: warning: unused parameter 'out_file' [-Wunused-parameter]
-     void Encode(FILE* in_file, FILE* out_file) {
-                                      ^
+    /home/user/src/comp0019.c:241:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+       for (int i = 0; i < numberOfCodes; i++) {
+                         ^
+    /home/user/src/comp0019.c:283:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+       for (int i = 0; i < numberOfCodes; i++) {
+                         ^
+    /home/user/src/comp0019.c:238:16: warning: unused variable 'shifting' [-Wunused-variable]
+       unsigned int shifting[2] = {5,3};
+                    ^
+    /home/user/src/comp0019.c:147:15: warning: unused variable 'makingAmount' [-Wunused-variable]
+      unsigned int makingAmount = 3;
+                   ^
     [ 21%] Building C object CMakeFiles/gene_encode.dir/src/decomp0019.c.o
     /home/user/src/decomp0019.c: In function 'Decode':
     /home/user/src/decomp0019.c:3:19: warning: unused parameter 'in_file' [-Wunused-parameter]
@@ -81,14 +90,14 @@ Report for commit SHA: 0b6be24ad4b7fdb05f88aa447cf0761e1a78c8c9
     Scanning dependencies of target test-all
     Test group one (all possible sequences with N elements):
     testing encode for 4 sequences of size 1: FAILED
-    	to repeat only this test run ./lzw_test --file ../test_data/all_bases_1 --test_index 0 --type encode
-    	to extract input for test run ./lzw_test --file ../test_data/all_bases_1 --test_index 0 --type encode --dump
+    	to repeat only this test run ./lzw_test --file ../test_data/all_bases_1 --test_index 1 --type encode
+    	to extract input for test run ./lzw_test --file ../test_data/all_bases_1 --test_index 1 --type encode --dump
     testing decode for 4 sequences of size 1: FAILED
     	to repeat only this test run ./lzw_test --file ../test_data/all_bases_1 --test_index 0 --type decode
     	to extract input for test run ./lzw_test --file ../test_data/all_bases_1 --test_index 0 --type decode --dump
     testing encode for 16 sequences of size 2: FAILED
-    	to repeat only this test run ./lzw_test --file ../test_data/all_bases_2 --test_index 0 --type encode
-    	to extract input for test run ./lzw_test --file ../test_data/all_bases_2 --test_index 0 --type encode --dump
+    	to repeat only this test run ./lzw_test --file ../test_data/all_bases_2 --test_index 4 --type encode
+    	to extract input for test run ./lzw_test --file ../test_data/all_bases_2 --test_index 4 --type encode --dump
     testing decode for 16 sequences of size 2: FAILED
     	to repeat only this test run ./lzw_test --file ../test_data/all_bases_2 --test_index 0 --type decode
     	to extract input for test run ./lzw_test --file ../test_data/all_bases_2 --test_index 0 --type decode --dump
