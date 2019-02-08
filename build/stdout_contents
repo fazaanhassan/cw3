@@ -1,0 +1,30 @@
+adding... 00 ... length is 2
+adding... 01 ... length is 2
+adding... 10 ... length is 2
+adding... 11 ... length is 2
+number of bases is = 2
+myBaseValue: 0
+charbaseString is ..  00
+previousBaseString is..   and length is.... 0
+totalLength is 2
+concatenatedBase is: 00OÆ¶
+Final codes are...................... 0
+adding... 00OÆ¶ ... length is 6
+previousBase from else is P = INPUT CHAR now 00
+myBaseValue: 1
+charbaseString is ..  01
+previousBaseString is..  00 and length is.... 2
+totalLength is 4
+concatenatedBase is: 0001¶
+Final codes are...................... 0
+adding... 0001¶ ... length is 6
+previousBase from else is P = INPUT CHAR now 01
+myBaseValue: 0
+charbaseString is ..  00
+previousBaseString is..  01 and length is.... 2
+totalLength is 4
+concatenatedBase is: 0100¶
+Final codes are...................... 1
+adding... 0100¶ ... length is 6
+previousBase from else is P = INPUT CHAR now 00
+Encoder output does not match model output
