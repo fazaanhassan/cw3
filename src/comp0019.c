@@ -198,17 +198,18 @@ void Encode(FILE* in_file, FILE* out_file) {
 				// printf("Im here bcus it EXISTS\n");
 				int concatLength = findLength(concatenatedBase);
 				// printf("ConcatLen = %d\n", concatLength);
-				previousBase = (unsigned char *) realloc(previousBase, concatLength);
+				previousBase = (unsigned char *) realloc(previousBase, concatLength + 1);
 
 				for (int i = 0; i < concatLength; i++) {
 					*(previousBase + i) = *(concatenatedBase + i);
 				}
+				*(previousBase + concatLength) = '\0';
 				// printf("previoisbase is P + C now.. %s\n",previousBase);
 			}
 			else {
 
 				int result = getCode(previousBase);
-				// printf("Final codes are...................... %d\n", result);
+				// printf("Current Final code are...................... %d\n", result);
 				allCodes[numberOfCodes] = result;
 				numberOfCodes++;
 				// printf("Output String: %s\n", previousBase);
@@ -219,7 +220,7 @@ void Encode(FILE* in_file, FILE* out_file) {
 				// free(previousBase);
 				// unsigned char* previousBase = (unsigned char*) malloc(2);
 
-				previousBase = (unsigned char *) realloc(previousBase, 2);
+				previousBase = (unsigned char *) realloc(previousBase, 3);
 				*previousBase = *charBaseValue;
 				*(previousBase + 1) = *(charBaseValue + 1);
 				*(previousBase + 2) = '\0';
@@ -280,12 +281,12 @@ void Encode(FILE* in_file, FILE* out_file) {
 		freeList(listHead);
 		free(previousBase);
 		free(concatenatedBase);
-
+		listHead = NULL;
+		listTail = NULL;
+		numberOfBases = 0;
 		for (int i = 0; i < numberOfCodes; i++) {
-			allCodes[i] = '\0';
+			allCodes[i] = '0';
 		}
-
-		
 
 	return;
 }
@@ -295,7 +296,7 @@ unsigned char* cPandC (unsigned char *previousbase, unsigned char *charBaseValue
 	unsigned int pBaseLength = findLength(previousbase);
 	unsigned int totalLength = pBaseLength + 2;
 
-	unsigned char *concatenated = (unsigned char *) malloc(totalLength);
+	unsigned char *concatenated = (unsigned char *) malloc(totalLength + 1);
 
 	// printf("charbaseString is ..  %s\n", charBaseValue);
 	// printf("previousBaseString is..  %s and length is.... %d\n", previousbase, pBaseLength);
@@ -305,20 +306,23 @@ unsigned char* cPandC (unsigned char *previousbase, unsigned char *charBaseValue
 		for (unsigned z = 0; z < totalLength; z++) {
 			*(concatenated + z) = *(charBaseValue + z);
 		}
+		*(concatenated + totalLength) = '\0';
 	}
 	else {
+
 		for (unsigned int i = 0; i < pBaseLength; i++) {
-		*(concatenated + i) = *(previousbase + i);
-
-
+			*(concatenated + i) = *(previousbase + i);
 		}
 
-	int only2 = 0;
+		int only2 = 0;
 
 		for (unsigned int j = pBaseLength; j < totalLength; j++ ){
 			*(concatenated + j) = *(charBaseValue + only2);
 			only2++;
+			
 		}
+
+		*(concatenated + totalLength) = '\0';
 
 	}
 
