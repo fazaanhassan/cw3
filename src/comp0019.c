@@ -28,7 +28,7 @@ void addNode(unsigned char *stringBaseValue, unsigned int code ) {
     codeTable *newNode =(codeTable *) malloc(sizeof(codeTable));
 
     int myLength = findLength(stringBaseValue);
-    printf("adding... %s ... length is %d\n", stringBaseValue, myLength);
+    // printf("adding... %s ... length is %d\n", stringBaseValue, myLength);
 
     for(int i = 0; i < myLength; i++) {
     	newNode->concatenationOfBaseValue[i] = *(stringBaseValue + i);
@@ -146,7 +146,7 @@ void Encode(FILE* in_file, FILE* out_file) {
 	unsigned int shiftingAmount[4] = {6, 4 ,2, 0};
 	unsigned int makingAmount = 3;
 
-	printf("number of bases is = %d\n", numberOfBases);
+	// printf("number of bases is = %d\n", numberOfBases);
 	
 	unsigned int allCodes[5000];
 	unsigned int numberOfCodes = 0;
@@ -166,7 +166,7 @@ void Encode(FILE* in_file, FILE* out_file) {
 		if (myByteValue == EOF) return;
 		for(int i = 0; i < 4; i++) {
 			myBaseValue = (myByteValue >> shiftingAmount[i]) & 3;
-			printf("myBaseValue: %d\n", myBaseValue);
+			// printf("myBaseValue: %d\n", myBaseValue);
 			counter ++;
 			// fputc(myBaseValue, out_file);	
 			
@@ -192,23 +192,23 @@ void Encode(FILE* in_file, FILE* out_file) {
 				printf("Error!\n");
 				} 
 			concatenatedBase = cPandC(previousBase, charBaseValue); 
-			printf("concatenatedBase is: %s\n", concatenatedBase);
+			// printf("concatenatedBase is: %s\n", concatenatedBase);
 			
 			if (checkExists(concatenatedBase) == 1) {
-				printf("Im here bcus it EXISTS\n");
+				// printf("Im here bcus it EXISTS\n");
 				int concatLength = findLength(concatenatedBase);
-				printf("ConcatLen = %d\n", concatLength);
+				// printf("ConcatLen = %d\n", concatLength);
 				previousBase = (unsigned char *) realloc(previousBase, concatLength);
 
 				for (int i = 0; i < concatLength; i++) {
 					*(previousBase + i) = *(concatenatedBase + i);
 				}
-				printf("previoisbase is P + C now.. %s\n",previousBase);
+				// printf("previoisbase is P + C now.. %s\n",previousBase);
 			}
 			else {
 
 				int result = getCode(previousBase);
-				printf("Final codes are...................... %d\n", result);
+				// printf("Final codes are...................... %d\n", result);
 				allCodes[numberOfCodes] = result;
 				numberOfCodes++;
 				// printf("Output String: %s\n", previousBase);
@@ -223,7 +223,7 @@ void Encode(FILE* in_file, FILE* out_file) {
 				*previousBase = *charBaseValue;
 				*(previousBase + 1) = *(charBaseValue + 1);
 				*(previousBase + 2) = '\0';
-				printf("previousBase from else is P = INPUT CHAR now %s\n", previousBase);
+				// printf("previousBase from else is P = INPUT CHAR now %s\n", previousBase);
 			}
 
 			if (counter == numberOfBases+1) break;
@@ -261,6 +261,7 @@ void Encode(FILE* in_file, FILE* out_file) {
 				packed = packed | ( storeLastBit << 7);
 				// printf("packed shold only contain 1 is %d\n", packed);
 				shiftingCounter++;
+				if (numberOfCodes == 3) fputc(packed, out_file);
 			}
 			else if (shiftingCounter == 3) {
 
@@ -284,6 +285,7 @@ void Encode(FILE* in_file, FILE* out_file) {
 			allCodes[i] = '\0';
 		}
 
+		
 
 	return;
 }
@@ -295,9 +297,9 @@ unsigned char* cPandC (unsigned char *previousbase, unsigned char *charBaseValue
 
 	unsigned char *concatenated = (unsigned char *) malloc(totalLength);
 
-	printf("charbaseString is ..  %s\n", charBaseValue);
-	printf("previousBaseString is..  %s and length is.... %d\n", previousbase, pBaseLength);
-	printf("totalLength is %d\n", totalLength);
+	// printf("charbaseString is ..  %s\n", charBaseValue);
+	// printf("previousBaseString is..  %s and length is.... %d\n", previousbase, pBaseLength);
+	// printf("totalLength is %d\n", totalLength);
 	if(pBaseLength == 0) {
 		
 		for (unsigned z = 0; z < totalLength; z++) {
