@@ -1,5 +1,5 @@
 ## COMP0019 CW3 Grade Report
-Report for commit SHA: b4dcf43030fc907c9e9d27c9e5a41ab2ed4665b9
+Report for commit SHA: 922589c19b97a793a9093c5633e42c225c0a40fe
 
 ### Output
 
@@ -50,7 +50,7 @@ Report for commit SHA: b4dcf43030fc907c9e9d27c9e5a41ab2ed4665b9
     /home/user/src/comp0019.c:241:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
        for (int i = 0; i < numberOfCodes; i++) {
                          ^
-    /home/user/src/comp0019.c:283:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    /home/user/src/comp0019.c:284:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
        for (int i = 0; i < numberOfCodes; i++) {
                          ^
     /home/user/src/comp0019.c:238:16: warning: unused variable 'shifting' [-Wunused-variable]
@@ -96,8 +96,8 @@ Report for commit SHA: b4dcf43030fc907c9e9d27c9e5a41ab2ed4665b9
     	to repeat only this test run ./lzw_test --file ../test_data/all_bases_1 --test_index 0 --type decode
     	to extract input for test run ./lzw_test --file ../test_data/all_bases_1 --test_index 0 --type decode --dump
     testing encode for 16 sequences of size 2: FAILED
-    	to repeat only this test run ./lzw_test --file ../test_data/all_bases_2 --test_index 4 --type encode
-    	to extract input for test run ./lzw_test --file ../test_data/all_bases_2 --test_index 4 --type encode --dump
+    	to repeat only this test run ./lzw_test --file ../test_data/all_bases_2 --test_index 1 --type encode
+    	to extract input for test run ./lzw_test --file ../test_data/all_bases_2 --test_index 1 --type encode --dump
     testing decode for 16 sequences of size 2: FAILED
     	to repeat only this test run ./lzw_test --file ../test_data/all_bases_2 --test_index 0 --type decode
     	to extract input for test run ./lzw_test --file ../test_data/all_bases_2 --test_index 0 --type decode --dump
