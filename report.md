@@ -1,5 +1,5 @@
 ## COMP0019 CW3 Grade Report
-Report for commit SHA: 922589c19b97a793a9093c5633e42c225c0a40fe
+Report for commit SHA: f73479096a7835a3d81bb31a610a17f716226b3c
 
 ### Output
 
@@ -47,13 +47,13 @@ Report for commit SHA: 922589c19b97a793a9093c5633e42c225c0a40fe
     /home/user/src/comp0019.c:166:19: warning: comparison is always false due to limited range of data type [-Wtype-limits]
        if (myByteValue == EOF) return;
                        ^
-    /home/user/src/comp0019.c:241:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    /home/user/src/comp0019.c:242:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
        for (int i = 0; i < numberOfCodes; i++) {
                          ^
-    /home/user/src/comp0019.c:284:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    /home/user/src/comp0019.c:287:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
        for (int i = 0; i < numberOfCodes; i++) {
                          ^
-    /home/user/src/comp0019.c:238:16: warning: unused variable 'shifting' [-Wunused-variable]
+    /home/user/src/comp0019.c:239:16: warning: unused variable 'shifting' [-Wunused-variable]
        unsigned int shifting[2] = {5,3};
                     ^
     /home/user/src/comp0019.c:147:15: warning: unused variable 'makingAmount' [-Wunused-variable]
@@ -89,9 +89,7 @@ Report for commit SHA: 922589c19b97a793a9093c5633e42c225c0a40fe
     [100%] Built target encode
     Scanning dependencies of target test-all
     Test group one (all possible sequences with N elements):
-    testing encode for 4 sequences of size 1: FAILED
-    	to repeat only this test run ./lzw_test --file ../test_data/all_bases_1 --test_index 1 --type encode
-    	to extract input for test run ./lzw_test --file ../test_data/all_bases_1 --test_index 1 --type encode --dump
+    testing encode for 4 sequences of size 1: OK
     testing decode for 4 sequences of size 1: FAILED
     	to repeat only this test run ./lzw_test --file ../test_data/all_bases_1 --test_index 0 --type decode
     	to extract input for test run ./lzw_test --file ../test_data/all_bases_1 --test_index 0 --type decode --dump
@@ -108,8 +106,8 @@ Report for commit SHA: 922589c19b97a793a9093c5633e42c225c0a40fe
     	to repeat only this test run ./lzw_test --file ../test_data/all_bases_3 --test_index 0 --type decode
     	to extract input for test run ./lzw_test --file ../test_data/all_bases_3 --test_index 0 --type decode --dump
     testing encode for 256 sequences of size 4: FAILED
-    	to repeat only this test run ./lzw_test --file ../test_data/all_bases_4 --test_index 0 --type encode
-    	to extract input for test run ./lzw_test --file ../test_data/all_bases_4 --test_index 0 --type encode --dump
+    	to repeat only this test run ./lzw_test --file ../test_data/all_bases_4 --test_index 1 --type encode
+    	to extract input for test run ./lzw_test --file ../test_data/all_bases_4 --test_index 1 --type encode --dump
     testing decode for 256 sequences of size 4: FAILED
     	to repeat only this test run ./lzw_test --file ../test_data/all_bases_4 --test_index 0 --type decode
     	to extract input for test run ./lzw_test --file ../test_data/all_bases_4 --test_index 0 --type decode --dump
@@ -125,18 +123,14 @@ Report for commit SHA: 922589c19b97a793a9093c5633e42c225c0a40fe
     testing decode for 4096 sequences of size 6: FAILED
     	to repeat only this test run ./lzw_test --file ../test_data/all_bases_6 --test_index 0 --type decode
     	to extract input for test run ./lzw_test --file ../test_data/all_bases_6 --test_index 0 --type decode --dump
-    Group one score: 0/12
+    Group one score: 1/12
     
     Test group two (pre-generated random sequences of size N):
-    testing encode for sequence of size 1: FAILED
-    	to repeat only this test run ./lzw_test --file ../test_data/rnd_0 --test_index 0 --type encode
-    	to extract input for test run ./lzw_test --file ../test_data/rnd_0 --test_index 0 --type encode --dump
+    testing encode for sequence of size 1: OK
     testing decode for sequence of size 1: FAILED
     	to repeat only this test run ./lzw_test --file ../test_data/rnd_0 --test_index 0 --type decode
     	to extract input for test run ./lzw_test --file ../test_data/rnd_0 --test_index 0 --type decode --dump
-    testing encode for sequence of size 4: FAILED
-    	to repeat only this test run ./lzw_test --file ../test_data/rnd_1 --test_index 0 --type encode
-    	to extract input for test run ./lzw_test --file ../test_data/rnd_1 --test_index 0 --type encode --dump
+    testing encode for sequence of size 4: OK
     testing decode for sequence of size 4: FAILED
     	to repeat only this test run ./lzw_test --file ../test_data/rnd_1 --test_index 0 --type decode
     	to extract input for test run ./lzw_test --file ../test_data/rnd_1 --test_index 0 --type decode --dump
@@ -176,7 +170,7 @@ Report for commit SHA: 922589c19b97a793a9093c5633e42c225c0a40fe
     testing decode for sequence of size 16384: FAILED
     	to repeat only this test run ./lzw_test --file ../test_data/rnd_7 --test_index 0 --type decode
     	to extract input for test run ./lzw_test --file ../test_data/rnd_7 --test_index 0 --type decode --dump
-    Group two score: 0/16
+    Group two score: 2/16
     
     Test group three (invalid inputs):
     testing encode for invalid encoder inputs: FAILED
@@ -193,5 +187,5 @@ Report for commit SHA: 922589c19b97a793a9093c5633e42c225c0a40fe
 
 ### Marking
 
-Total score: (0 / 12) * 35 + (0 / 16) * 35 + (0 / 2) * 30 = 0 / 100
+Total score: (1 / 12) * 35 + (2 / 16) * 35 + (0 / 2) * 30 = 7 / 100
 
