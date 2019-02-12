@@ -1,10 +1,9 @@
 #include "comp0019.h"
 #include <stdlib.h>
-// Prototypes
-unsigned char *cPandC (unsigned char *previousbase, unsigned char *charBaseValue);
-int getCode(unsigned char* base);
+#include <stdio.h>
 
-unsigned int numberOfBases = 0;
+void writeToFile();
+unsigned char concatenated[5000];
 
 struct codeTableValues {
     unsigned char concatenationOfBaseValue[5000];
@@ -14,6 +13,7 @@ struct codeTableValues {
 typedef struct codeTableValues codeTable;
 codeTable *listHead = NULL;
 codeTable *listTail = NULL;
+
 
 int findLength(unsigned char *array) {
 	unsigned int counter = 0;
@@ -33,6 +33,7 @@ void addNode(unsigned char *stringBaseValue, unsigned int code ) {
     for(int i = 0; i < myLength; i++) {
     	newNode->concatenationOfBaseValue[i] = *(stringBaseValue + i);
     }
+    newNode->concatenationOfBaseValue[myLength] = '\0';
     newNode->codeValue = code;
 
     newNode->next=NULL;
@@ -48,46 +49,62 @@ void addNode(unsigned char *stringBaseValue, unsigned int code ) {
 
 }
 
-char checkExists(unsigned char *base) {
+char checkExists() {
     codeTable *codeTableNode = listHead;
-    int baseLength = findLength(base);
+    int baseLength = findLength(concatenated);
     int counter = 0;
     // printf("base is.. %d \n", baseLength);
     unsigned char baseEle;
     unsigned char codeEle;
-
+    unsigned char breakFlag = 0;
     while(codeTableNode != NULL) {
 		counter = 0;
 		int codeTableBaseLength = findLength(codeTableNode->concatenationOfBaseValue);
 		if (baseLength == codeTableBaseLength) {
 		// printf("im here in checkexists codeTableLen %d\n", codeTableBaseLength);
-			  while ( (*base + counter) != '\0' && counter < baseLength) {
-			  	baseEle = *(base + counter);
+			  while ( counter < baseLength) {
+			  	baseEle = *(concatenated + counter);
 			  	codeEle = codeTableNode->concatenationOfBaseValue[counter];
 			  	// printf("base is.. %s and codeTable is.. %s", base, codeTableNode->concatenationOfBaseValue);
 			  	// printf("im second loop\n");
 			  	// printf("current element is... %c\n", baseEle);
 			  	// printf("compared to.... %c\n", codeEle);
 
-    			if (baseEle != codeEle) goto nextNode;
+    			if (baseEle != codeEle) {
+
+    				breakFlag = 1;
+    				break;
+
+    			}
     			counter++;
     			
     		}
-
-    		return 1;
+    		if (breakFlag == 1) {
+    			codeTableNode = codeTableNode->next;
+    			breakFlag = 0;
+    		}
+    		else {
+      		return 1;
+    		}
 		}
-          nextNode:
-      
+		else {
         	codeTableNode = codeTableNode->next;
+
+		}
     }
   	return 0;
 }
 
 void printCodeTable() {
 	codeTable *codeTableNode = listHead;
-	if (codeTableNode == NULL) return ;
+	if (codeTableNode == NULL) {
+
+   	printf("null head.. return!\n");
+		return ;
+
+	}
 	while(codeTableNode != NULL) {
-		// printf("Code number: %d Value: %s\n", codeTableNode->codeValue, codeTableNode->concatenationOfBaseValue);
+		printf("Code number: %d Value: %s\n", codeTableNode->codeValue, codeTableNode->concatenationOfBaseValue);
 		codeTableNode = codeTableNode->next;
 	}
 	return ;
@@ -101,205 +118,18 @@ void freeList(codeTable* head) {
        tmp = head;
        head = head->next;
        free(tmp);
+       // if(tmp != NULL) free(tmp);
     }
-
 }
 
-
-void Encode(FILE* in_file, FILE* out_file) {
-	// Code 
-	// Initilise first few nodes
-
-	unsigned char base0[] = "00";
-	unsigned char base1[] = "01";
-	unsigned char base2[] = "10";
-	unsigned char base3[] = "11";
-	addNode(base0, 0);
-	addNode(base1, 1);
-	addNode(base2, 2);
-	addNode(base3, 3);
-	// printCodeTable();
-
-	// unsigned char checking[] = "0000";
-	// int results = checkExists(checking);
-	// printf("exists.... %d\n", results);
-
-	numberOfBases |= (fgetc(in_file));
-	numberOfBases |= (fgetc(in_file) << 8);
-	numberOfBases |= (fgetc(in_file) << 16);
-	numberOfBases |= (fgetc(in_file) << 24);
-
-	unsigned char lsbyte = numberOfBases & 0xFF;
-	unsigned char nextLsByte = ((numberOfBases >> 8) & 0xFF);
-	unsigned char thirdLsByte = ((numberOfBases >> 16) & 0xFF);
-	unsigned char msbyte = ((numberOfBases >> 24) && 0xFF);
-
-	unsigned char buffer[4];
-	buffer[0] = lsbyte;
-	buffer[1] = nextLsByte;
-	buffer[2] = thirdLsByte;
-	buffer[3] = msbyte;
-	
-	fwrite(&buffer[0], 1, 4, out_file);
-
-
-	unsigned int shiftingAmount[4] = {6, 4 ,2, 0};
-	unsigned int makingAmount = 3;
-
-	// printf("number of bases is = %d\n", numberOfBases);
-	
-	unsigned int allCodes[5000];
-	unsigned int numberOfCodes = 0;
-	unsigned int counter = 0;
-	unsigned int codeCounter = 4;
-	unsigned char myByteValue = 0;
-	unsigned char myBaseValue = 0;
-
-	unsigned char *previousBase = (unsigned char *) malloc(sizeof(char) * 1);
-	*previousBase = '\0';
-	unsigned char charBaseValue[2];
-	unsigned char *concatenatedBase;
-
-	while (1) {
-		if (counter == numberOfBases+1) break;
-		myByteValue = fgetc(in_file);
-		if (myByteValue == EOF) return;
-		for(int i = 0; i < 4; i++) {
-			myBaseValue = (myByteValue >> shiftingAmount[i]) & 3;
-			// printf("myBaseValue: %d\n", myBaseValue);
-			counter ++;
-			// fputc(myBaseValue, out_file);	
-			
-			switch(myBaseValue) {
-				case(0):
-					charBaseValue[0] = '0';
-					charBaseValue[1] = '0';
-					break;
-				case(1):
-					charBaseValue[0] = '0';
-					charBaseValue[1] = '1';		
-					break;
-				case(2):
-					charBaseValue[0] = '1';
-					charBaseValue[1] = '0';
-					break;
-
-				case(3):
-					charBaseValue[0] = '1';
-					charBaseValue[1] = '1';
-					break;
-				default:
-				printf("Error!\n");
-				} 
-			concatenatedBase = cPandC(previousBase, charBaseValue); 
-			// printf("concatenatedBase is: %s\n", concatenatedBase);
-			
-			if (checkExists(concatenatedBase) == 1) {
-				// printf("Im here bcus it EXISTS\n");
-				int concatLength = findLength(concatenatedBase);
-				// printf("ConcatLen = %d\n", concatLength);
-				previousBase = (unsigned char *) realloc(previousBase, concatLength + 1);
-
-				for (int i = 0; i < concatLength; i++) {
-					*(previousBase + i) = *(concatenatedBase + i);
-				}
-				*(previousBase + concatLength) = '\0';
-				// printf("previoisbase is P + C now.. %s\n",previousBase);
-			}
-			else {
-
-				int result = getCode(previousBase);
-				// printf("Current Final code are...................... %d\n", result);
-				allCodes[numberOfCodes] = result;
-				numberOfCodes++;
-				// printf("Output String: %s\n", previousBase);
-				addNode(concatenatedBase, codeCounter);
-
-				codeCounter ++;
-				
-				// free(previousBase);
-				// unsigned char* previousBase = (unsigned char*) malloc(2);
-
-				previousBase = (unsigned char *) realloc(previousBase, 3);
-				*previousBase = *charBaseValue;
-				*(previousBase + 1) = *(charBaseValue + 1);
-				*(previousBase + 2) = '\0';
-				// printf("previousBase from else is P = INPUT CHAR now %s\n", previousBase);
-			}
-
-			if (counter == numberOfBases+1) break;
-
-		}
-
-
-	}
-
-		
-		unsigned char packed = 0;
-		unsigned int shifting[2] = {5,3};
-		unsigned int shiftingCounter = 0;
-		unsigned char storeLastBit;
-		for (int i = 0; i < numberOfCodes; i++) {
-
-			if (shiftingCounter == 0) {
-				packed = packed | ((allCodes[i] << 5));
-				shiftingCounter++;
-				if(numberOfCodes == 1) fputc(packed, out_file);
-			}
-			else if (shiftingCounter == 1){ 
-				packed = packed | ((allCodes[i]) << 2);
-				shiftingCounter++;
-				if(numberOfCodes == 2) fputc(packed, out_file);
-			}
-			else if (shiftingCounter == 2) {
-				storeLastBit = allCodes[i] & 0x1;
-				// printf("stored last bit should be %d\n", storeLastBit);
-
-				packed = packed | ((allCodes[i]) >> 1);
-				// printf("packed first is %d\n", packed);
-				fputc(packed, out_file);
-				packed = 0;
-				packed = packed | ( storeLastBit << 7);
-				// printf("packed shold only contain 1 is %d\n", packed);
-				shiftingCounter++;
-				if (numberOfCodes == 3) fputc(packed, out_file);
-			}
-			else if (shiftingCounter == 3) {
-
-				packed = packed | (allCodes[i] << 4);
-				// printf("packed on shfiting 3 is.. %d\n", packed);
-
-				fputc(packed, out_file);
-			}
-
-			// printf("codes are..%d................... %d\n", i, allCodes[i]);
-
-		}
-
-
-		printCodeTable();
-		freeList(listHead);
-		free(previousBase);
-		free(concatenatedBase);
-		listHead = NULL;
-		listTail = NULL;
-		numberOfBases = 0;
-		for (int i = 0; i < numberOfCodes; i++) {
-			allCodes[i] = '0';
-		}
-
-	return;
-}
-
-
-unsigned char* cPandC (unsigned char *previousbase, unsigned char *charBaseValue) {
-	unsigned int pBaseLength = findLength(previousbase);
+void cPandC (unsigned char *preFix, unsigned char *charBaseValue) {
+	unsigned int pBaseLength = findLength(preFix);
 	unsigned int totalLength = pBaseLength + 2;
 
-	unsigned char *concatenated = (unsigned char *) malloc(totalLength + 1);
+	// unsigned char *concatenated = (unsigned char *) malloc(totalLength + 1);
 
 	// printf("charbaseString is ..  %s\n", charBaseValue);
-	// printf("previousBaseString is..  %s and length is.... %d\n", previousbase, pBaseLength);
+	// printf("preFixString is..  %s and length is.... %d\n", preFix, pBaseLength);
 	// printf("totalLength is %d\n", totalLength);
 	if(pBaseLength == 0) {
 		
@@ -311,7 +141,7 @@ unsigned char* cPandC (unsigned char *previousbase, unsigned char *charBaseValue
 	else {
 
 		for (unsigned int i = 0; i < pBaseLength; i++) {
-			*(concatenated + i) = *(previousbase + i);
+			*(concatenated + i) = *(preFix + i);
 		}
 
 		int only2 = 0;
@@ -319,14 +149,13 @@ unsigned char* cPandC (unsigned char *previousbase, unsigned char *charBaseValue
 		for (unsigned int j = pBaseLength; j < totalLength; j++ ){
 			*(concatenated + j) = *(charBaseValue + only2);
 			only2++;
-			
+
 		}
 
 		*(concatenated + totalLength) = '\0';
 
 	}
 
-	return concatenated;
 }
 
 int getCode(unsigned char* base) {
@@ -358,3 +187,272 @@ int getCode(unsigned char* base) {
     }
   	return 0;
 }
+
+void Encode(FILE* in_file, FILE* out_file) {
+	// Code 
+
+	printf("hello\n");
+	// Initilise first few nodes
+	freeList(listHead);
+	codeTable *NewlistHead = NULL;
+	codeTable *NewlistTail = NULL;
+	listHead = NewlistHead;
+	listTail = NewlistTail;
+
+	unsigned char base0[] = "00";
+	unsigned char base1[] = "01";
+	unsigned char base2[] = "10";
+	unsigned char base3[] = "11";
+
+	// freeList(listHead);
+	// listHead = NULL;
+	// listTail = NULL;
+
+	addNode(base0, 0);
+	addNode(base1, 1);
+	addNode(base2, 2);
+	addNode(base3, 3);
+
+
+	// unsigned char checking[] = "0000";
+	// int results = checkExists(checking);
+	// printf("exists.... %d\n", results);
+	unsigned int numberOfBases = 0;
+
+	numberOfBases |= fgetc(in_file);
+	numberOfBases |= (fgetc(in_file) << 8);
+	numberOfBases |= (fgetc(in_file) << 16);
+	numberOfBases |= (fgetc(in_file) << 24);
+
+	unsigned char lsbyte = numberOfBases & 0xFF;
+	unsigned char nextLsByte = ((numberOfBases >> 8) & 0xFF);
+	unsigned char thirdLsByte = ((numberOfBases >> 16) & 0xFF);
+	unsigned char msbyte = ((numberOfBases >> 24) && 0xFF);
+
+	unsigned char buffer[4];
+	buffer[0] = lsbyte;
+	buffer[1] = nextLsByte;
+	buffer[2] = thirdLsByte;
+	buffer[3] = msbyte;
+
+	fputc(buffer[0], out_file);
+	fputc(buffer[1], out_file);
+	fputc(buffer[2], out_file);
+	fputc(buffer[3], out_file);
+
+
+
+	unsigned int shiftingAmount[4] = {6, 4 ,2, 0};
+	unsigned int makingAmount = 3;
+
+	// printf("number of bases is = %d\n", numberOfBases);
+	
+	unsigned int allCodes[5000];
+	unsigned int numberOfCodes = 0;
+	unsigned int counter = 0;
+	unsigned int codeCounter = 4;
+	unsigned char myByteValue = 0;
+	unsigned char myBaseValue = 0;
+
+
+	unsigned char preFix[5000];
+	*preFix = '\0';
+	unsigned char charBaseValue[2];
+	unsigned char *concatenatedBase ;
+	int concatLength = 0;
+	int result = 0;
+	while (1) {
+		if (counter == numberOfBases) break;
+		myByteValue = fgetc(in_file);
+		if (myByteValue == EOF) return;
+		for(unsigned int i = 0; i < 4; i++) {
+			myBaseValue = (myByteValue >> shiftingAmount[i]) & 3;
+			// printf("myBaseValue: %d\n", myBaseValue);
+			counter ++;
+			// fputc(myBaseValue, out_file);	
+			
+			if(myBaseValue == 0) {
+					charBaseValue[0] = '0';
+					charBaseValue[1] = '0';
+			}
+			if(myBaseValue == 1) {
+					charBaseValue[0] = '0';
+					charBaseValue[1] = '1';
+			}
+			if(myBaseValue == 2) {
+					charBaseValue[0] = '1';
+					charBaseValue[1] = '0';
+			}
+			if(myBaseValue == 3) {
+					charBaseValue[0] = '1';
+					charBaseValue[1] = '1';
+			}
+
+			 cPandC(preFix, charBaseValue); 
+			// printf("concatenatedBase is: %s\n", concatenatedBase);
+
+			
+			if (checkExists() == 1) {
+				// printf("Im here bcus it EXISTS\n");
+				concatLength = findLength(concatenated);
+				// printf("ConcatLen = %d\n", concatLength);
+				// free(preFix)
+				// unsigned char* preFix = (unsigned char*) malloc(concatLength + 1);
+
+				
+
+				for (int i = 0; i < concatLength; i++) {
+					*(preFix + i) = *(concatenated + i);
+				}
+				*(preFix + concatLength) = '\0';
+	
+
+				// printf("previoisbase is P + C now.. %s\n",preFix);
+			}
+			else {
+				result = getCode(preFix);
+				// printf("Current Final code are...................... %d\n", result);
+				allCodes[numberOfCodes] = result;
+				numberOfCodes++;
+				printf("Output String: %s\n", preFix);
+				addNode(concatenated, codeCounter);
+
+				codeCounter++;
+				
+				// free(preFix);
+				// unsigned char* preFix = (unsigned char*) malloc(3);
+
+			
+				*preFix = *charBaseValue;
+				*(preFix + 1) = *(charBaseValue + 1);
+				*(preFix + 2) = *(charBaseValue + 2);
+				printf("preFix from else is P = INPUT CHAR now %s\n", preFix);
+			}
+
+			if (counter == numberOfBases) break;
+
+		}
+
+	}
+		result = getCode(preFix);
+		printf("final result code is.. %d\n", result );
+		allCodes[numberOfCodes] = result;
+		numberOfCodes++;
+		codeCounter--;
+
+		printf("These are the codes....\n");
+		for (int i = 0; i < numberOfCodes; i++) {
+			printf("pick %d\n",allCodes[i]);
+		}
+
+		unsigned char packed = 0;
+		unsigned int shifting[2] = {5,3};
+		unsigned int shiftingCounter = 0;
+		unsigned char storeLastBit = 0;
+		unsigned char secondLastBit = 0;
+		unsigned char thirdBit = 0;
+		for (int i = 0; i < numberOfCodes; i++) {
+
+			if (shiftingCounter == 0) {
+				packed = packed | ((allCodes[i] << 5));
+				shiftingCounter++;
+				if(numberOfCodes == 1) fputc(packed, out_file);
+			}
+			else if (shiftingCounter == 1){ 
+				packed = packed | ((allCodes[i]) << 2);
+				shiftingCounter++;
+				if(numberOfCodes == 2) fputc(packed, out_file);
+			}
+			else if (shiftingCounter == 2) {
+				storeLastBit = allCodes[i] & 0x1;
+			
+				// thirdBit = allCodes[i] & 0x4;
+				// printf("stored last bit should be %d\n", storeLastBit);
+
+				packed = packed | ((allCodes[i]) >> 1);
+				// printf("packed first is %d\n", packed);
+				fputc(packed, out_file);
+				packed = 0;
+				packed = packed | ( storeLastBit << 7);
+
+				// printf("packed shold only contain 1 is %d\n", packed);
+				shiftingCounter++;
+				if (numberOfCodes == 3) fputc(packed, out_file);
+			}
+			else if (shiftingCounter == 3) {
+
+				packed = packed | (allCodes[i] << 4);
+
+				// printf("packed on shfiting 3 is.. %d\n", packed);
+				shiftingCounter++;
+				if (numberOfCodes == 4) fputc(packed, out_file);
+			}
+			else if (shiftingCounter == 4) {
+				packed = packed | (allCodes[i] << 1);
+				shiftingCounter++;
+				if (numberOfCodes == 5) fputc(packed, out_file);
+			}
+			else if (shiftingCounter == 5) {
+				storeLastBit = allCodes[i] & 0x1;
+				secondLastBit = allCodes[i] & 0x2;
+				thirdBit = allCodes[i] & 0x4;
+				// printf("stored last bit should be %d\n", storeLastBit);
+				if (codeCounter >= 8 && codeCounter < 16 ) {
+					printf("................\n");
+					packed = packed | ((allCodes[i]) >> 3);
+					// printf("packed first is %d\n", packed);
+					fputc(packed, out_file);
+					packed = 0;
+					packed = packed | ( thirdBit << 5 );
+					packed = packed | ( secondLastBit << 5);
+					packed = packed | ( storeLastBit << 5 );
+
+				}
+				else {
+										printf("................\n");
+
+					packed = packed | ((allCodes[i]) >> 2);
+					fputc(packed, out_file);
+					packed = 0;
+					packed = packed | ( secondLastBit << 5);
+					packed = packed | ( storeLastBit << 6);
+
+
+				}
+				// printf("packed first is %d\n", packed);
+
+
+				// // printf("packed shold only contain 1 is %d\n", packed);
+				shiftingCounter++;
+				if (numberOfCodes == 6) fputc(packed, out_file);
+
+			}
+
+			// printf("codes are..%d................... %d\n", i, allCodes[i]);
+
+		}
+
+
+		for (int i = 0; i < 5000; i++) {
+			concatenated[i] = '\0';
+		}
+
+		
+		// free(concatenatedBase);
+		// freeList(listHead);
+
+		printCodeTable();
+
+		// printf("concabases... %s\n", concatenatedBase);
+		// listHead = NULL;
+		// listTail = NULL;
+		// numberOfBases = 0;
+
+
+		// for (int i = 0; i < numberOfCodes; i++) {
+		// 	allCodes[i] = '0';
+		// }
+		
+
+}
+
