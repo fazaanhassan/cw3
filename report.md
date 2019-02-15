@@ -1,5 +1,5 @@
 ## COMP0019 CW3 Grade Report
-Report for commit SHA: afe7a43cc3b9b8f47e69ac8e20934285cd69fb90
+Report for commit SHA: 69c3698eac94a4f3ee2c954671c44fb0f4859779
 
 ### Output
 
@@ -44,16 +44,16 @@ Report for commit SHA: afe7a43cc3b9b8f47e69ac8e20934285cd69fb90
     [  7%] Building C object CMakeFiles/gene_encode.dir/src/comp0019lib.c.o
     [ 14%] Building C object CMakeFiles/gene_encode.dir/src/comp0019.c.o
     /home/user/src/comp0019.c: In function 'Encode':
-    /home/user/src/comp0019.c:267:19: warning: comparison is always false due to limited range of data type [-Wtype-limits]
+    /home/user/src/comp0019.c:268:19: warning: comparison is always false due to limited range of data type [-Wtype-limits]
        if (myByteValue == EOF) return;
                        ^
-    /home/user/src/comp0019.c:344:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    /home/user/src/comp0019.c:345:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
        for (int i = 0; i < numberOfCodes; i++) {
                          ^
-    /home/user/src/comp0019.c:354:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    /home/user/src/comp0019.c:355:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
        for (int i = 0; i < numberOfCodes; i++) {
                          ^
-    /home/user/src/comp0019.c:349:16: warning: unused variable 'shifting' [-Wunused-variable]
+    /home/user/src/comp0019.c:350:16: warning: unused variable 'shifting' [-Wunused-variable]
        unsigned int shifting[2] = {5,3};
                     ^
     /home/user/src/comp0019.c:261:17: warning: unused variable 'concatenatedBase' [-Wunused-variable]
@@ -127,9 +127,7 @@ Report for commit SHA: afe7a43cc3b9b8f47e69ac8e20934285cd69fb90
     testing decode for sequence of size 4: FAILED
     	to repeat only this test run ./lzw_test --file ../test_data/rnd_1 --test_index 0 --type decode
     	to extract input for test run ./lzw_test --file ../test_data/rnd_1 --test_index 0 --type decode --dump
-    testing encode for sequence of size 16: FAILED
-    	to repeat only this test run ./lzw_test --file ../test_data/rnd_2 --test_index 0 --type encode
-    	to extract input for test run ./lzw_test --file ../test_data/rnd_2 --test_index 0 --type encode --dump
+    testing encode for sequence of size 16: OK
     testing decode for sequence of size 16: FAILED
     	to repeat only this test run ./lzw_test --file ../test_data/rnd_2 --test_index 0 --type decode
     	to extract input for test run ./lzw_test --file ../test_data/rnd_2 --test_index 0 --type decode --dump
@@ -163,7 +161,7 @@ Report for commit SHA: afe7a43cc3b9b8f47e69ac8e20934285cd69fb90
     testing decode for sequence of size 16384: FAILED
     	to repeat only this test run ./lzw_test --file ../test_data/rnd_7 --test_index 0 --type decode
     	to extract input for test run ./lzw_test --file ../test_data/rnd_7 --test_index 0 --type decode --dump
-    Group two score: 2/16
+    Group two score: 3/16
     
     Test group three (invalid inputs):
     testing encode for invalid encoder inputs: FAILED
@@ -180,5 +178,5 @@ Report for commit SHA: afe7a43cc3b9b8f47e69ac8e20934285cd69fb90
 
 ### Marking
 
-Total score: (6 / 12) * 35 + (2 / 16) * 35 + (0 / 2) * 30 = 22 / 100
+Total score: (6 / 12) * 35 + (3 / 16) * 35 + (0 / 2) * 30 = 24 / 100
 
