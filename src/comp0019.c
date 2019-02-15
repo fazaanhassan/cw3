@@ -193,7 +193,7 @@ void Encode(FILE* in_file, FILE* out_file) {
 
 	printf("hello\n");
 	// Initilise first few nodes
-	freeList(listHead);
+	// freeList(listHead);
 	codeTable *NewlistHead = NULL;
 	codeTable *NewlistTail = NULL;
 	listHead = NewlistHead;
@@ -264,6 +264,7 @@ void Encode(FILE* in_file, FILE* out_file) {
 	while (1) {
 		if (counter == numberOfBases) break;
 		myByteValue = fgetc(in_file);
+		printf("myByteValue\n");
 		if (myByteValue == EOF) return;
 		for(unsigned int i = 0; i < 4; i++) {
 			myBaseValue = (myByteValue >> shiftingAmount[i]) & 3;
@@ -397,7 +398,7 @@ void Encode(FILE* in_file, FILE* out_file) {
 				secondLastBit = allCodes[i] & 0x2;
 				thirdBit = allCodes[i] & 0x4;
 				// printf("stored last bit should be %d\n", storeLastBit);
-				if (codeCounter >= 8 && codeCounter < 16 ) {
+				// if (codeCounter >= 8 && codeCounter < 16 ) {
 					printf("................\n");
 					packed = packed | ((allCodes[i]) >> 3);
 					// printf("packed first is %d\n", packed);
@@ -407,25 +408,40 @@ void Encode(FILE* in_file, FILE* out_file) {
 					packed = packed | ( secondLastBit << 5);
 					packed = packed | ( storeLastBit << 5 );
 
-				}
-				else {
-										printf("................\n");
+				// }
+				// else {
 
-					packed = packed | ((allCodes[i]) >> 2);
-					fputc(packed, out_file);
-					packed = 0;
-					packed = packed | ( secondLastBit << 5);
-					packed = packed | ( storeLastBit << 6);
+				// 	packed = packed | ((allCodes[i]) >> 2);
+				// 	fputc(packed, out_file);
+				// 	packed = 0;
+				// 	packed = packed | ( secondLastBit << 5);
+				// 	packed = packed | ( storeLastBit << 6);
 
 
-				}
+				// }
 				// printf("packed first is %d\n", packed);
-
-
 				// // printf("packed shold only contain 1 is %d\n", packed);
 				shiftingCounter++;
-				if (numberOfCodes == 6) fputc(packed, out_file);
+				if(numberOfCodes==6) putc(packed, out_file);
+			}
+			else if(shiftingCounter == 6 || shiftingCounter == 8 || shiftingCounter == 10 || shiftingCounter == 12) {
+				packed = packed | (allCodes[i] << 1);
+				shiftingCounter++;
+				if(shiftingCounter == 13) fputc(packed, out_file);
+			}
+			else if (shiftingCounter == 7 || shiftingCounter == 9 || shiftingCounter==11) {
+				storeLastBit = allCodes[i] & 0x1;
+				secondLastBit = allCodes[i] & 0x2;
+				thirdBit = allCodes[i] & 0x4;
 
+				packed = packed | (allCodes[i] >> 3);
+				fputc(packed, out_file);
+				packed = 0;
+				packed = packed | ( thirdBit << 5 );
+				packed = packed | ( secondLastBit << 5);
+				packed = packed | ( storeLastBit << 5 );
+				shiftingCounter++;
+				if(numberOfCodes == 7 || numberOfCodes == 9 || numberOfCodes == 11) fputc(packed, out_file);
 			}
 
 			// printf("codes are..%d................... %d\n", i, allCodes[i]);
