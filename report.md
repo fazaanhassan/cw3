@@ -1,5 +1,5 @@
 ## COMP0019 CW3 Grade Report
-Report for commit SHA: 69c3698eac94a4f3ee2c954671c44fb0f4859779
+Report for commit SHA: fe8699073820a8881c428873337e1b84a69e1509
 
 ### Output
 
@@ -44,32 +44,35 @@ Report for commit SHA: 69c3698eac94a4f3ee2c954671c44fb0f4859779
     [  7%] Building C object CMakeFiles/gene_encode.dir/src/comp0019lib.c.o
     [ 14%] Building C object CMakeFiles/gene_encode.dir/src/comp0019.c.o
     /home/user/src/comp0019.c: In function 'Encode':
-    /home/user/src/comp0019.c:268:19: warning: comparison is always false due to limited range of data type [-Wtype-limits]
+    /home/user/src/comp0019.c:297:19: warning: comparison is always false due to limited range of data type [-Wtype-limits]
        if (myByteValue == EOF) return;
                        ^
-    /home/user/src/comp0019.c:345:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    /home/user/src/comp0019.c:379:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
        for (int i = 0; i < numberOfCodes; i++) {
                          ^
-    /home/user/src/comp0019.c:355:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+    /home/user/src/comp0019.c:389:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
        for (int i = 0; i < numberOfCodes; i++) {
                          ^
-    /home/user/src/comp0019.c:350:16: warning: unused variable 'shifting' [-Wunused-variable]
+    /home/user/src/comp0019.c:384:16: warning: unused variable 'shifting' [-Wunused-variable]
        unsigned int shifting[2] = {5,3};
                     ^
-    /home/user/src/comp0019.c:261:17: warning: unused variable 'concatenatedBase' [-Wunused-variable]
+    /home/user/src/comp0019.c:290:17: warning: unused variable 'concatenatedBase' [-Wunused-variable]
       unsigned char *concatenatedBase ;
                      ^
-    /home/user/src/comp0019.c:246:15: warning: unused variable 'makingAmount' [-Wunused-variable]
+    /home/user/src/comp0019.c:275:15: warning: unused variable 'makingAmount' [-Wunused-variable]
       unsigned int makingAmount = 3;
                    ^
     [ 21%] Building C object CMakeFiles/gene_encode.dir/src/decomp0019.c.o
     /home/user/src/decomp0019.c: In function 'Decode':
-    /home/user/src/decomp0019.c:3:19: warning: unused parameter 'in_file' [-Wunused-parameter]
-     void Decode(FILE* in_file, FILE* out_file) {
-                       ^
-    /home/user/src/decomp0019.c:3:34: warning: unused parameter 'out_file' [-Wunused-parameter]
-     void Decode(FILE* in_file, FILE* out_file) {
-                                      ^
+    /home/user/src/decomp0019.c:344:15: warning: unused variable 'intialCounter' [-Wunused-variable]
+      unsigned int intialCounter = 0;
+                   ^
+    /home/user/src/decomp0019.c:343:15: warning: unused variable 'codeTableCounter' [-Wunused-variable]
+      unsigned int codeTableCounter = 3;
+                   ^
+    /home/user/src/decomp0019.c:342:16: warning: unused variable 'outPut' [-Wunused-variable]
+      unsigned char outPut[5000];
+                    ^
     [ 28%] Linking C static library libgene_encode.a
     [ 28%] Built target gene_encode
     Scanning dependencies of target gflags_nothreads_static
@@ -94,20 +97,20 @@ Report for commit SHA: 69c3698eac94a4f3ee2c954671c44fb0f4859779
     Test group one (all possible sequences with N elements):
     testing encode for 4 sequences of size 1: OK
     testing decode for 4 sequences of size 1: FAILED
-    	to repeat only this test run ./lzw_test --file ../test_data/all_bases_1 --test_index 0 --type decode
-    	to extract input for test run ./lzw_test --file ../test_data/all_bases_1 --test_index 0 --type decode --dump
+    	to repeat only this test run ./lzw_test --file ../test_data/all_bases_1 --test_index 1 --type decode
+    	to extract input for test run ./lzw_test --file ../test_data/all_bases_1 --test_index 1 --type decode --dump
     testing encode for 16 sequences of size 2: OK
     testing decode for 16 sequences of size 2: FAILED
-    	to repeat only this test run ./lzw_test --file ../test_data/all_bases_2 --test_index 0 --type decode
-    	to extract input for test run ./lzw_test --file ../test_data/all_bases_2 --test_index 0 --type decode --dump
+    	to repeat only this test run ./lzw_test --file ../test_data/all_bases_2 --test_index 1 --type decode
+    	to extract input for test run ./lzw_test --file ../test_data/all_bases_2 --test_index 1 --type decode --dump
     testing encode for 64 sequences of size 3: OK
     testing decode for 64 sequences of size 3: FAILED
-    	to repeat only this test run ./lzw_test --file ../test_data/all_bases_3 --test_index 0 --type decode
-    	to extract input for test run ./lzw_test --file ../test_data/all_bases_3 --test_index 0 --type decode --dump
+    	to repeat only this test run ./lzw_test --file ../test_data/all_bases_3 --test_index 1 --type decode
+    	to extract input for test run ./lzw_test --file ../test_data/all_bases_3 --test_index 1 --type decode --dump
     testing encode for 256 sequences of size 4: OK
     testing decode for 256 sequences of size 4: FAILED
-    	to repeat only this test run ./lzw_test --file ../test_data/all_bases_4 --test_index 0 --type decode
-    	to extract input for test run ./lzw_test --file ../test_data/all_bases_4 --test_index 0 --type decode --dump
+    	to repeat only this test run ./lzw_test --file ../test_data/all_bases_4 --test_index 1 --type decode
+    	to extract input for test run ./lzw_test --file ../test_data/all_bases_4 --test_index 1 --type decode --dump
     testing encode for 1024 sequences of size 5: OK
     testing decode for 1024 sequences of size 5: FAILED
     	to repeat only this test run ./lzw_test --file ../test_data/all_bases_5 --test_index 0 --type decode
@@ -120,9 +123,7 @@ Report for commit SHA: 69c3698eac94a4f3ee2c954671c44fb0f4859779
     
     Test group two (pre-generated random sequences of size N):
     testing encode for sequence of size 1: OK
-    testing decode for sequence of size 1: FAILED
-    	to repeat only this test run ./lzw_test --file ../test_data/rnd_0 --test_index 0 --type decode
-    	to extract input for test run ./lzw_test --file ../test_data/rnd_0 --test_index 0 --type decode --dump
+    testing decode for sequence of size 1: OK
     testing encode for sequence of size 4: OK
     testing decode for sequence of size 4: FAILED
     	to repeat only this test run ./lzw_test --file ../test_data/rnd_1 --test_index 0 --type decode
@@ -161,16 +162,14 @@ Report for commit SHA: 69c3698eac94a4f3ee2c954671c44fb0f4859779
     testing decode for sequence of size 16384: FAILED
     	to repeat only this test run ./lzw_test --file ../test_data/rnd_7 --test_index 0 --type decode
     	to extract input for test run ./lzw_test --file ../test_data/rnd_7 --test_index 0 --type decode --dump
-    Group two score: 3/16
+    Group two score: 4/16
     
     Test group three (invalid inputs):
-    testing encode for invalid encoder inputs: FAILED
-    	to repeat only this test run ./lzw_test --file ../test_data/invalid_encoder_inputs --test_index 0 --type encode
-    	to extract input for test run ./lzw_test --file ../test_data/invalid_encoder_inputs --test_index 0 --type encode --dump
+    testing encode for invalid encoder inputs: OK
     testing decode for invalid decoder inputs: FAILED
     	to repeat only this test run ./lzw_test --file ../test_data/invalid_decoder_inputs --test_index 0 --type decode
     	to extract input for test run ./lzw_test --file ../test_data/invalid_decoder_inputs --test_index 0 --type decode --dump
-    Group three score: 0/2
+    Group three score: 1/2
     
     [100%] Built target test-all
     
@@ -178,5 +177,5 @@ Report for commit SHA: 69c3698eac94a4f3ee2c954671c44fb0f4859779
 
 ### Marking
 
-Total score: (6 / 12) * 35 + (3 / 16) * 35 + (0 / 2) * 30 = 24 / 100
+Total score: (6 / 12) * 35 + (4 / 16) * 35 + (1 / 2) * 30 = 41 / 100
 
