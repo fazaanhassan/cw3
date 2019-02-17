@@ -193,7 +193,7 @@ void Encode(FILE* in_file, FILE* out_file) {
 
 	printf("hello\n");
 	// Initilise first few nodes
-	// freeList(listHead);
+	freeList(listHead);
 	codeTable *NewlistHead = NULL;
 	codeTable *NewlistTail = NULL;
 	listHead = NewlistHead;
@@ -218,7 +218,36 @@ void Encode(FILE* in_file, FILE* out_file) {
 	// int results = checkExists(checking);
 	// printf("exists.... %d\n", results);
 	unsigned int numberOfBases = 0;
+	unsigned int numberOfBytes = 0;
+	numberOfBases |= fgetc(in_file);
+	numberOfBases |= (fgetc(in_file) << 8);
+	numberOfBases |= (fgetc(in_file) << 16);
+	numberOfBases |= (fgetc(in_file) << 24);
 
+	char writeError[] = "Invalid encoder input: .*";
+	while(fgetc(in_file) != EOF) {
+		numberOfBytes++;
+	}
+	printf("number of byts is... %d and number of bases is %d\n", numberOfBytes, numberOfBases);
+	if (numberOfBytes == 0 && numberOfBases != 0) {
+		fputs(writeError, out_file);
+		return;
+	}
+	else {
+		unsigned int totalBasesPossible = numberOfBytes * 4;
+		unsigned int lowerBoundBases = totalBasesPossible - 3;
+
+		if (numberOfBases <= totalBasesPossible && numberOfBases >= lowerBoundBases) {
+			printf("good\n");
+		}
+		else {
+			fputs(writeError, out_file);
+			return;
+		}
+
+	}
+
+	rewind(in_file);
 	numberOfBases |= fgetc(in_file);
 	numberOfBases |= (fgetc(in_file) << 8);
 	numberOfBases |= (fgetc(in_file) << 16);
@@ -341,6 +370,11 @@ void Encode(FILE* in_file, FILE* out_file) {
 		numberOfCodes++;
 		codeCounter--;
 
+
+		
+
+
+		
 		printf("These are the codes....\n");
 		for (int i = 0; i < numberOfCodes; i++) {
 			printf("pick %d\n",allCodes[i]);
