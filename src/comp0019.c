@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-void writeToFile();
+void writeToFile(unsigned int *codeArray, unsigned int numberOfCodes, FILE *out_file);
+unsigned long long int powerFunc( int exponent);
 unsigned char concatenated[5000];
 
 struct codeTableValues {
@@ -280,8 +281,8 @@ void Encode(FILE* in_file, FILE* out_file) {
 	unsigned int numberOfCodes = 0;
 	unsigned int counter = 0;
 	unsigned int codeCounter = 4;
-	unsigned char myByteValue = 0;
-	unsigned char myBaseValue = 0;
+	char myByteValue = 0;
+	unsigned int myBaseValue = 0;
 
 
 	unsigned char preFix[5000];
@@ -294,7 +295,6 @@ void Encode(FILE* in_file, FILE* out_file) {
 		if (counter == numberOfBases) break;
 		myByteValue = fgetc(in_file);
 		printf("myByteValue\n");
-		if (myByteValue == EOF) return;
 		for(unsigned int i = 0; i < 4; i++) {
 			myBaseValue = (myByteValue >> shiftingAmount[i]) & 3;
 			// printf("myBaseValue: %d\n", myBaseValue);
@@ -370,15 +370,8 @@ void Encode(FILE* in_file, FILE* out_file) {
 		numberOfCodes++;
 		codeCounter--;
 
+		writeToFile(allCodes, numberOfCodes, out_file);
 
-		
-
-
-		
-		printf("These are the codes....\n");
-		for (int i = 0; i < numberOfCodes; i++) {
-			printf("pick %d\n",allCodes[i]);
-		}
 
 		unsigned char packed = 0;
 		unsigned int shifting[2] = {5,3};
@@ -386,101 +379,101 @@ void Encode(FILE* in_file, FILE* out_file) {
 		unsigned char storeLastBit = 0;
 		unsigned char secondLastBit = 0;
 		unsigned char thirdBit = 0;
-		for (int i = 0; i < numberOfCodes; i++) {
+		// for (int i = 0; i < numberOfCodes; i++) {
 
-			if (shiftingCounter == 0) {
-				packed = packed | ((allCodes[i] << 5));
-				shiftingCounter++;
-				if(numberOfCodes == 1) fputc(packed, out_file);
-			}
-			else if (shiftingCounter == 1){ 
-				packed = packed | ((allCodes[i]) << 2);
-				shiftingCounter++;
-				if(numberOfCodes == 2) fputc(packed, out_file);
-			}
-			else if (shiftingCounter == 2) {
-				storeLastBit = allCodes[i] & 0x1;
+		// 	if (shiftingCounter == 0) {
+		// 		packed = packed | ((allCodes[i] << 5));
+		// 		shiftingCounter++;
+		// 		if(numberOfCodes == 1) fputc(packed, out_file);
+		// 	}
+		// 	else if (shiftingCounter == 1){ 
+		// 		packed = packed | ((allCodes[i]) << 2);
+		// 		shiftingCounter++;
+		// 		if(numberOfCodes == 2) fputc(packed, out_file);
+		// 	}
+		// 	else if (shiftingCounter == 2) {
+		// 		storeLastBit = allCodes[i] & 0x1;
 			
-				// thirdBit = allCodes[i] & 0x4;
-				// printf("stored last bit should be %d\n", storeLastBit);
+		// 		// thirdBit = allCodes[i] & 0x4;
+		// 		// printf("stored last bit should be %d\n", storeLastBit);
 
-				packed = packed | ((allCodes[i]) >> 1);
-				// printf("packed first is %d\n", packed);
-				fputc(packed, out_file);
-				packed = 0;
-				packed = packed | ( storeLastBit << 7);
+		// 		packed = packed | ((allCodes[i]) >> 1);
+		// 		// printf("packed first is %d\n", packed);
+		// 		fputc(packed, out_file);
+		// 		packed = 0;
+		// 		packed = packed | ( storeLastBit << 7);
 
-				// printf("packed shold only contain 1 is %d\n", packed);
-				shiftingCounter++;
-				if (numberOfCodes == 3) fputc(packed, out_file);
-			}
-			else if (shiftingCounter == 3) {
+		// 		// printf("packed shold only contain 1 is %d\n", packed);
+		// 		shiftingCounter++;
+		// 		if (numberOfCodes == 3) fputc(packed, out_file);
+		// 	}
+		// 	else if (shiftingCounter == 3) {
 
-				packed = packed | (allCodes[i] << 4);
+		// 		packed = packed | (allCodes[i] << 4);
 
-				// printf("packed on shfiting 3 is.. %d\n", packed);
-				shiftingCounter++;
-				if (numberOfCodes == 4) fputc(packed, out_file);
-			}
-			else if (shiftingCounter == 4) {
-				packed = packed | (allCodes[i] << 1);
-				shiftingCounter++;
-				if (numberOfCodes == 5) fputc(packed, out_file);
-			}
-			else if (shiftingCounter == 5) {
-				storeLastBit = allCodes[i] & 0x1;
-				secondLastBit = allCodes[i] & 0x2;
-				thirdBit = allCodes[i] & 0x4;
-				// printf("stored last bit should be %d\n", storeLastBit);
-				// if (codeCounter >= 8 && codeCounter < 16 ) {
-					printf("................\n");
-					packed = packed | ((allCodes[i]) >> 3);
-					// printf("packed first is %d\n", packed);
-					fputc(packed, out_file);
-					packed = 0;
-					packed = packed | ( thirdBit << 5 );
-					packed = packed | ( secondLastBit << 5);
-					packed = packed | ( storeLastBit << 5 );
+		// 		// printf("packed on shfiting 3 is.. %d\n", packed);
+		// 		shiftingCounter++;
+		// 		if (numberOfCodes == 4) fputc(packed, out_file);
+		// 	}
+		// 	else if (shiftingCounter == 4) {
+		// 		packed = packed | (allCodes[i] << 1);
+		// 		shiftingCounter++;
+		// 		if (numberOfCodes == 5) fputc(packed, out_file);
+		// 	}
+		// 	else if (shiftingCounter == 5) {
+		// 		storeLastBit = allCodes[i] & 0x1;
+		// 		secondLastBit = allCodes[i] & 0x2;
+		// 		thirdBit = allCodes[i] & 0x4;
+		// 		// printf("stored last bit should be %d\n", storeLastBit);
+		// 		// if (codeCounter >= 8 && codeCounter < 16 ) {
+		// 			printf("................\n");
+		// 			packed = packed | ((allCodes[i]) >> 3);
+		// 			// printf("packed first is %d\n", packed);
+		// 			fputc(packed, out_file);
+		// 			packed = 0;
+		// 			packed = packed | ( thirdBit << 5 );
+		// 			packed = packed | ( secondLastBit << 5);
+		// 			packed = packed | ( storeLastBit << 5 );
 
-				// }
-				// else {
+		// 		// }
+		// 		// else {
 
-				// 	packed = packed | ((allCodes[i]) >> 2);
-				// 	fputc(packed, out_file);
-				// 	packed = 0;
-				// 	packed = packed | ( secondLastBit << 5);
-				// 	packed = packed | ( storeLastBit << 6);
+		// 		// 	packed = packed | ((allCodes[i]) >> 2);
+		// 		// 	fputc(packed, out_file);
+		// 		// 	packed = 0;
+		// 		// 	packed = packed | ( secondLastBit << 5);
+		// 		// 	packed = packed | ( storeLastBit << 6);
 
 
-				// }
-				// printf("packed first is %d\n", packed);
-				// // printf("packed shold only contain 1 is %d\n", packed);
-				shiftingCounter++;
-				if(numberOfCodes==6) putc(packed, out_file);
-			}
-			else if(shiftingCounter == 6 || shiftingCounter == 8 || shiftingCounter == 10 || shiftingCounter == 12) {
-				packed = packed | (allCodes[i] << 1);
-				shiftingCounter++;
-				if(shiftingCounter == 13) fputc(packed, out_file);
-			}
-			else if (shiftingCounter == 7 || shiftingCounter == 9 || shiftingCounter==11) {
-				storeLastBit = allCodes[i] & 0x1;
-				secondLastBit = allCodes[i] & 0x2;
-				thirdBit = allCodes[i] & 0x4;
+		// 		// }
+		// 		// printf("packed first is %d\n", packed);
+		// 		// // printf("packed shold only contain 1 is %d\n", packed);
+		// 		shiftingCounter++;
+		// 		if(numberOfCodes==6) putc(packed, out_file);
+		// 	}
+		// 	else if(shiftingCounter == 6 || shiftingCounter == 8 || shiftingCounter == 10 || shiftingCounter == 12) {
+		// 		packed = packed | (allCodes[i] << 1);
+		// 		shiftingCounter++;
+		// 		if(shiftingCounter == 13) fputc(packed, out_file);
+		// 	}
+		// 	else if (shiftingCounter == 7 || shiftingCounter == 9 || shiftingCounter==11) {
+		// 		storeLastBit = allCodes[i] & 0x1;
+		// 		secondLastBit = allCodes[i] & 0x2;
+		// 		thirdBit = allCodes[i] & 0x4;
 
-				packed = packed | (allCodes[i] >> 3);
-				fputc(packed, out_file);
-				packed = 0;
-				packed = packed | ( thirdBit << 5 );
-				packed = packed | ( secondLastBit << 5);
-				packed = packed | ( storeLastBit << 5 );
-				shiftingCounter++;
-				if(numberOfCodes == 7 || numberOfCodes == 9 || numberOfCodes == 11) fputc(packed, out_file);
-			}
+		// 		packed = packed | (allCodes[i] >> 3);
+		// 		fputc(packed, out_file);
+		// 		packed = 0;
+		// 		packed = packed | ( thirdBit << 5 );
+		// 		packed = packed | ( secondLastBit << 5);
+		// 		packed = packed | ( storeLastBit << 5 );
+		// 		shiftingCounter++;
+		// 		if(numberOfCodes == 7 || numberOfCodes == 9 || numberOfCodes == 11) fputc(packed, out_file);
+		// 	}
 
-			// printf("codes are..%d................... %d\n", i, allCodes[i]);
+		// 	// printf("codes are..%d................... %d\n", i, allCodes[i]);
 
-		}
+		// }
 
 
 		for (int i = 0; i < 5000; i++) {
@@ -491,7 +484,7 @@ void Encode(FILE* in_file, FILE* out_file) {
 		// free(concatenatedBase);
 		// freeList(listHead);
 
-		printCodeTable();
+		// printCodeTable();
 
 		// printf("concabases... %s\n", concatenatedBase);
 		// listHead = NULL;
@@ -506,3 +499,109 @@ void Encode(FILE* in_file, FILE* out_file) {
 
 }
 
+unsigned long long int powerFunc(int exponent) {
+
+	if (exponent < 0) return 4;
+	unsigned int base = 2;
+	unsigned long long int result = 1;
+	while (exponent != 0) {
+		result = result * base;
+		--exponent;
+	}
+
+	printf("returining result is %llu \n", result);
+	return result;
+}
+
+void writeToFile(unsigned int *codeArray, unsigned int numberOfCodes, FILE *out_file) {
+		printf("These are the codes....\n");
+		unsigned codeValueCounter = 4;
+		unsigned int writeTheseBits = 3;
+		unsigned long long int baseValue = 0;
+		unsigned long long int temp8bitBase = 0;
+		unsigned int totalWritten = 3;
+		unsigned int totalWrittenDifference = 0;
+		unsigned int maskingAmount = 0;
+		unsigned int endOfBaseWrite = 2;
+		unsigned int flagOfWritten = 0;
+		unsigned int z = 8;
+		unsigned int biggerMask = 0;
+
+		for (int i = 0; i < numberOfCodes; i++) {
+			printf("pick %d\n",*(codeArray + i));
+		}
+
+		for (int i = 0; i < numberOfCodes; i++) {
+			printf("code array is %d \n",*(codeArray + i) );
+
+
+			baseValue = baseValue | *(codeArray + i);
+			// if (writeTheseBits == 9) z = 9;
+			totalWrittenDifference = abs(totalWritten - 8);
+			maskingAmount = powerFunc(totalWrittenDifference) - 1;
+			endOfBaseWrite = 8 - totalWrittenDifference;
+										// printf("total written is %d\n", totalWritten);
+
+			if (totalWritten >= 8) 	{
+				temp8bitBase = baseValue;
+				printf("totalWrittenDiff is %d\n", totalWrittenDifference);
+				temp8bitBase = temp8bitBase >> totalWrittenDifference;
+			
+				fputc(temp8bitBase, out_file);
+
+				printf("masking amoutn is %d\n", maskingAmount);
+				baseValue = baseValue & maskingAmount;
+				biggerMask = totalWrittenDifference - 8;
+				if(biggerMask == 0 && writeTheseBits == 9) {
+					fputc(baseValue, out_file);
+					totalWritten = 9;
+					continue;
+				}
+
+
+				totalWritten = totalWrittenDifference;
+				printf("basevalue should be 00.0000..: %llu\n", baseValue);
+				flagOfWritten = 1;
+			}
+
+			if (( i + 1) == numberOfCodes && flagOfWritten == 1) {
+
+				printf("im here... base value is %d and endOfBaseWrite is %d\n", baseValue, endOfBaseWrite);
+				printf("masking amount is.... %d\n", maskingAmount);
+				baseValue = baseValue << endOfBaseWrite;
+				fputc(baseValue, out_file);
+				flagOfWritten = 0;
+				break;
+			}
+			flagOfWritten = 0;
+
+			if( (i + 1) == numberOfCodes) {
+				totalWrittenDifference = 8 - totalWritten;
+				printf("im her in second if e\n");
+				baseValue = baseValue << totalWrittenDifference;
+				fputc(baseValue, out_file);
+				flagOfWritten = 0;
+				break;
+				}
+
+			codeValueCounter++;	
+			if (codeValueCounter > 8 && codeValueCounter <= 16) writeTheseBits = 4;
+			if (codeValueCounter > 16 && codeValueCounter <= 32) writeTheseBits = 5;
+			if (codeValueCounter > 32 && codeValueCounter <= 64) writeTheseBits = 6;
+			if (codeValueCounter > 64 && codeValueCounter <= 128) writeTheseBits = 7;
+			if (codeValueCounter > 128 && codeValueCounter <= 256) writeTheseBits = 8;
+			if (codeValueCounter > 256 && codeValueCounter <= 512) writeTheseBits = 9;
+			if (codeValueCounter > 512 && codeValueCounter <= 1024) writeTheseBits = 10;
+			if (codeValueCounter > 1024 && codeValueCounter <= 2048) writeTheseBits = 11;
+			if (codeValueCounter > 2048 && codeValueCounter <= 4096) writeTheseBits = 12;
+			baseValue = baseValue << writeTheseBits;
+			printf("base value is....... %d\n", baseValue );
+			totalWritten = totalWritten + writeTheseBits;
+			printf("writethsesbits is.... %d and totalwritten is %d \n", writeTheseBits, totalWritten);
+			
+		}
+
+
+
+
+}
