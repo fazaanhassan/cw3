@@ -1,5 +1,5 @@
 ## COMP0019 CW3 Grade Report
-Report for commit SHA: 4036377468a736f150744bad5d9c35ea1dba5602
+Report for commit SHA: 727b59d44c808faac15b290e000047bce50ea245
 
 ### Output
 
@@ -92,6 +92,9 @@ Report for commit SHA: 4036377468a736f150744bad5d9c35ea1dba5602
                     ^
     [ 21%] Building C object CMakeFiles/gene_encode.dir/src/decomp0019.c.o
     /home/user/src/decomp0019.c: In function 'Decode':
+    /home/user/src/decomp0019.c:374:2: warning: statement with no effect [-Wunused-value]
+      temp[1] - '\0';
+      ^
     /home/user/src/decomp0019.c:344:15: warning: unused variable 'intialCounter' [-Wunused-variable]
       unsigned int intialCounter = 0;
                    ^
@@ -124,9 +127,7 @@ Report for commit SHA: 4036377468a736f150744bad5d9c35ea1dba5602
     Scanning dependencies of target test-all
     Test group one (all possible sequences with N elements):
     testing encode for 4 sequences of size 1: OK
-    testing decode for 4 sequences of size 1: FAILED
-    	to repeat only this test run ./lzw_test --file ../test_data/all_bases_1 --test_index 1 --type decode
-    	to extract input for test run ./lzw_test --file ../test_data/all_bases_1 --test_index 1 --type decode --dump
+    testing decode for 4 sequences of size 1: OK
     testing encode for 16 sequences of size 2: OK
     testing decode for 16 sequences of size 2: FAILED
     	to repeat only this test run ./lzw_test --file ../test_data/all_bases_2 --test_index 1 --type decode
@@ -147,7 +148,7 @@ Report for commit SHA: 4036377468a736f150744bad5d9c35ea1dba5602
     testing decode for 4096 sequences of size 6: FAILED
     	to repeat only this test run ./lzw_test --file ../test_data/all_bases_6 --test_index 0 --type decode
     	to extract input for test run ./lzw_test --file ../test_data/all_bases_6 --test_index 0 --type decode --dump
-    Group one score: 6/12
+    Group one score: 7/12
     
     Test group two (pre-generated random sequences of size N):
     testing encode for sequence of size 1: OK
@@ -199,5 +200,5 @@ Report for commit SHA: 4036377468a736f150744bad5d9c35ea1dba5602
 
 ### Marking
 
-Total score: (6 / 12) * 35 + (7 / 16) * 35 + (1 / 2) * 30 = 48 / 100
+Total score: (7 / 12) * 35 + (7 / 16) * 35 + (1 / 2) * 30 = 51 / 100
 
