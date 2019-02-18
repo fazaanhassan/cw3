@@ -554,6 +554,13 @@ void writeToFile(unsigned int *codeArray, unsigned int numberOfCodes, FILE *out_
 				biggerMask = totalWrittenDifference - 8;
 				if(biggerMask == 0 && writeTheseBits == 9) {
 					fputc(baseValue, out_file);
+					baseValue = 0;
+					totalWritten = 9;
+					continue;
+				}
+				if(biggerMask == 0 && writeTheseBits == 10) {
+					fputc(baseValue, out_file);
+					baseValue = 0;
 					totalWritten = 9;
 					continue;
 				}
