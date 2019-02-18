@@ -370,4 +370,13 @@ void Decode(FILE* in_file, FILE* out_file) {
 		concatenatedD[i] = '\0';
 		previousString[i] = '\0';
 	}
+	temp[0] = '\0';
+	temp[1] - '\0';
+	read2 = 0;
+	stringCounter = 0;
+	nextBitshiftCounter = 0;
+	currentBaseWrite = 0;
+
+
+
 }
