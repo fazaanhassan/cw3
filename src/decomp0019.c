@@ -120,7 +120,7 @@ void freeListD(codeTableD* head) {
     }
 }
 
-void cPandCZD (unsigned char *preFix, unsigned char *charBaseValue) {
+void cPandCZD (unsigned char *preFix, unsigned char  *charBaseValue) {
 	unsigned int pBaseLength = findLengthD(preFix);
 	unsigned int totalLength = pBaseLength + 2;
 
@@ -129,14 +129,6 @@ void cPandCZD (unsigned char *preFix, unsigned char *charBaseValue) {
 	// printf("charbaseString is ..  %s\n", charBaseValue);
 	// printf("preFixString is..  %s and length is.... %d\n", preFix, pBaseLength);
 	// printf("totalLength is %d\n", totalLength);
-	if(pBaseLength == 0) {
-		
-		for (unsigned z = 0; z < totalLength; z++) {
-			*(concatenatedD + z) = *(charBaseValue + z);
-		}
-		*(concatenatedD + totalLength) = '\0';
-	}
-	else {
 
 		for (unsigned int i = 0; i < pBaseLength; i++) {
 			*(concatenatedD + i) = *(preFix + i);
@@ -149,17 +141,15 @@ void cPandCZD (unsigned char *preFix, unsigned char *charBaseValue) {
 			only2++;
 
 		}
-
 		*(concatenatedD + totalLength) = '\0';
-
 	}
 
-}
 
 
 unsigned char gotString[5000];
 unsigned char previousString[5000];
-void getCodeStringD(unsigned int code) {
+
+unsigned int getCodeStringD(unsigned int code) {
 	
     codeTableD *codeTableNode = listHeadD;
 
@@ -176,105 +166,236 @@ void getCodeStringD(unsigned int code) {
 
     		gotString[counter] = '\0';
 
-    		return;
+    		return 1;
 		}
         codeTableNode = codeTableNode->next;
     }
-  	return;
+  	return 0;
 }
 
 
 
-unsigned int nextBitshift[4] = {6,4,2,0};
+unsigned int nextBitshift[3] = {2,2,2};
 unsigned char temp[2];
 unsigned int read2 = 0;
 unsigned int stringCounter = 0;
-unsigned char currentBaseWrite = 0;
+unsigned int currentBaseWrite = 0;
 unsigned int nextBitshiftCounter = 0;
+unsigned justGotStringFlag = 1;
 
-void write2Bits(FILE* out_file) {
+void write2Bits(FILE* out_file, unsigned int lastBase) {
+	unsigned int insideFlag = 0;
+	unsigned int writtenPerfectly = 0;
 
-	while (gotString[stringCounter] != '\0') {
-		temp[read2] = gotString[stringCounter];
-		stringCounter++;
+	if (justGotStringFlag == 1) {
+		printf("got string is %s\n", gotString );
+		while (gotString[stringCounter] != '\0') {
+			temp[read2] = gotString[stringCounter];
+			stringCounter++;
+			insideFlag = 0;
+			writtenPerfectly = 0;
 
-		if (read2 == 1) {
-			read2 = 0;
+			if (read2 == 1) {
+				read2 = 0;
+				printf("temp for gotString is... %s\n",temp);
+				if (temp[0] == '0' && temp[1] == '0') {
+					if(nextBitshiftCounter == 0) {
+						currentBaseWrite = (currentBaseWrite | 0x0) << nextBitshift[nextBitshiftCounter];
+					}
+					if(nextBitshiftCounter == 1) {
+						currentBaseWrite = (currentBaseWrite | 0x0) << nextBitshift[nextBitshiftCounter];
+					}
+					if(nextBitshiftCounter == 2) {
+						currentBaseWrite = (currentBaseWrite | 0x0) << nextBitshift[nextBitshiftCounter];
+					}
+					if(nextBitshiftCounter == 3) {
+						currentBaseWrite = (currentBaseWrite | 0x0);
+					}
+				}
+				else if (temp[0] == '0' && temp[1] == '1') {
+					if(nextBitshiftCounter == 0) {
+						currentBaseWrite = (currentBaseWrite | 0x1) << nextBitshift[nextBitshiftCounter];
+					}
+					if(nextBitshiftCounter == 1) {
+						currentBaseWrite = (currentBaseWrite | 0x1) << nextBitshift[nextBitshiftCounter];
+					}
+					if(nextBitshiftCounter == 2) {
+						currentBaseWrite = (currentBaseWrite | 0x1) << nextBitshift[nextBitshiftCounter];
+					}
+					if(nextBitshiftCounter == 3) {
+						currentBaseWrite = (currentBaseWrite | 0x1);
+					}
 
-			if (temp[0] == '0' && temp[1] == '0') {
-				if(nextBitshiftCounter == 0) {
-					currentBaseWrite = (currentBaseWrite | 0x0) << nextBitshift[nextBitshiftCounter];
 				}
-				if(nextBitshiftCounter == 1) {
-					currentBaseWrite = (currentBaseWrite | 0x0) << nextBitshift[nextBitshiftCounter];
+				else if (temp[0] == '1' && temp[1] == '0') {
+					if(nextBitshiftCounter == 0) {
+						currentBaseWrite = (currentBaseWrite | 0x2) << nextBitshift[nextBitshiftCounter];
+					}
+					if(nextBitshiftCounter == 1) {
+						currentBaseWrite = (currentBaseWrite | 0x2) << nextBitshift[nextBitshiftCounter];
+					}
+					if(nextBitshiftCounter == 2) {
+						currentBaseWrite = (currentBaseWrite | 0x2) << nextBitshift[nextBitshiftCounter];
+					}
+					if(nextBitshiftCounter == 3) {
+						currentBaseWrite = (currentBaseWrite | 0x2);
+					}
+				
 				}
-				if(nextBitshiftCounter == 2) {
-					currentBaseWrite = (currentBaseWrite | 0x0) << nextBitshift[nextBitshiftCounter];
-				}
-				if(nextBitshiftCounter == 3) {
-					currentBaseWrite = (currentBaseWrite | 0x0) << nextBitshift[nextBitshiftCounter];
-				}
-			}
-			else if (temp[0] == '0' && temp[1] == '1') {
-				if(nextBitshiftCounter == 0) {
-					currentBaseWrite = (currentBaseWrite | 0x1) << nextBitshift[nextBitshiftCounter];
-				}
-				if(nextBitshiftCounter == 1) {
-					currentBaseWrite = (currentBaseWrite | 0x1) << nextBitshift[nextBitshiftCounter];
-				}
-				if(nextBitshiftCounter == 2) {
-					currentBaseWrite = (currentBaseWrite | 0x1) << nextBitshift[nextBitshiftCounter];
-				}
-				if(nextBitshiftCounter == 3) {
-					currentBaseWrite = (currentBaseWrite | 0x1) << nextBitshift[nextBitshiftCounter];
-				}
-
-			}
-			else if (temp[0] == '1' && temp[1] == '0') {
-				if(nextBitshiftCounter == 0) {
-					currentBaseWrite = (currentBaseWrite | 0x2) << nextBitshift[nextBitshiftCounter];
-				}
-				if(nextBitshiftCounter == 1) {
-					currentBaseWrite = (currentBaseWrite | 0x2) << nextBitshift[nextBitshiftCounter];
-				}
-				if(nextBitshiftCounter == 2) {
-					currentBaseWrite = (currentBaseWrite | 0x2) << nextBitshift[nextBitshiftCounter];
-				}
-				if(nextBitshiftCounter == 3) {
-					currentBaseWrite = (currentBaseWrite | 0x2) << nextBitshift[nextBitshiftCounter];
-				}
+				else if (temp[0] == '1' && temp[1] == '1') {
+					if(nextBitshiftCounter == 0) {
+						currentBaseWrite = (currentBaseWrite | 0x3) << nextBitshift[nextBitshiftCounter];
+						printf("basewrie should be 12 %d\n",currentBaseWrite );
+						printf("here 1\n");
+					}
+					if(nextBitshiftCounter == 1) {
+						currentBaseWrite = (currentBaseWrite | 0x3) << nextBitshift[nextBitshiftCounter];
+						printf("here 2\n");
+					}
+					if(nextBitshiftCounter == 2) {
+						currentBaseWrite = (currentBaseWrite | 0x3) << nextBitshift[nextBitshiftCounter];
+						printf("here 3\n");
+					}
+					if(nextBitshiftCounter == 3) {
+						currentBaseWrite = (currentBaseWrite | 0x3);
+					}	
 			
+				}
+
+				nextBitshiftCounter++;
+				if (nextBitshiftCounter == 4) {
+					printf("hereeeeeeeeeeeeee\n");
+					fputc(currentBaseWrite, out_file);
+					nextBitshiftCounter = 0;
+					currentBaseWrite = 0;
+					writtenPerfectly = 1;
+				} 
+				insideFlag = 1;
+
 			}
-			else if (temp[0] == '1' && temp[1] == '1') {
-				if(nextBitshiftCounter == 0) {
-					currentBaseWrite = (currentBaseWrite | 0x3) << nextBitshift[nextBitshiftCounter];
-				}
-				if(nextBitshiftCounter == 1) {
-					currentBaseWrite = (currentBaseWrite | 0x3) << nextBitshift[nextBitshiftCounter];
-				}
-				if(nextBitshiftCounter == 2) {
-					currentBaseWrite = (currentBaseWrite | 0x3) << nextBitshift[nextBitshiftCounter];
-				}
-				if(nextBitshiftCounter == 3) {
-					currentBaseWrite = (currentBaseWrite | 0x3) << nextBitshift[nextBitshiftCounter];
-				}	
-		
+			if (insideFlag != 1) read2++;
+		}
+		stringCounter = 0;
+		unsigned int moreShifts = 3 - nextBitshiftCounter;
+
+		if(lastBase == 1 && moreShifts != 0 && writtenPerfectly != 1) {
+
+			for (unsigned int i = 0; i < moreShifts; i++) {
+				currentBaseWrite = currentBaseWrite << 2;
 			}
 
-			nextBitshiftCounter++;
-			if (nextBitshiftCounter == 4) {
-				fputc(currentBaseWrite, out_file);
-				nextBitshiftCounter = 0;
-				currentBaseWrite = 0;
-
-			} 
-			
+			fputc(currentBaseWrite, out_file);
 
 		}
-		read2++;
+		else if (lastBase == 1 && moreShifts == 0 && writtenPerfectly != 1) {
+			fputc(currentBaseWrite, out_file);
+		}
 	}
-	stringCounter = 0;
-	fputc(currentBaseWrite, out_file);
+	else {
+		while (concatenatedD[stringCounter] != '\0') {
+			temp[read2] = concatenatedD[stringCounter];
+			stringCounter++;
+			insideFlag = 0;
+			writtenPerfectly = 0;
+
+			if (read2 == 1) {
+				read2 = 0;
+				printf("temp is... %s\n",temp);
+				if (temp[0] == '0' && temp[1] == '0') {
+					if(nextBitshiftCounter == 0) {
+						currentBaseWrite = (currentBaseWrite | 0x0) << nextBitshift[nextBitshiftCounter];
+					}
+					if(nextBitshiftCounter == 1) {
+						currentBaseWrite = (currentBaseWrite | 0x0) << nextBitshift[nextBitshiftCounter];
+					}
+					if(nextBitshiftCounter == 2) {
+						currentBaseWrite = (currentBaseWrite | 0x0) << nextBitshift[nextBitshiftCounter];
+					}
+					if(nextBitshiftCounter == 3) {
+						currentBaseWrite = (currentBaseWrite | 0x0);
+					}
+				}
+				else if (temp[0] == '0' && temp[1] == '1') {
+					if(nextBitshiftCounter == 0) {
+						currentBaseWrite = (currentBaseWrite | 0x1) << nextBitshift[nextBitshiftCounter];
+					}
+					if(nextBitshiftCounter == 1) {
+						currentBaseWrite = (currentBaseWrite | 0x1) << nextBitshift[nextBitshiftCounter];
+					}
+					if(nextBitshiftCounter == 2) {
+						currentBaseWrite = (currentBaseWrite | 0x1) << nextBitshift[nextBitshiftCounter];
+					}
+					if(nextBitshiftCounter == 3) {
+						currentBaseWrite = (currentBaseWrite | 0x1);
+					}
+
+				}
+				else if (temp[0] == '1' && temp[1] == '0') {
+					if(nextBitshiftCounter == 0) {
+						currentBaseWrite = (currentBaseWrite | 0x2) << nextBitshift[nextBitshiftCounter];
+					}
+					if(nextBitshiftCounter == 1) {
+						currentBaseWrite = (currentBaseWrite | 0x2) << nextBitshift[nextBitshiftCounter];
+					}
+					if(nextBitshiftCounter == 2) {
+						currentBaseWrite = (currentBaseWrite | 0x2) << nextBitshift[nextBitshiftCounter];
+					}
+					if(nextBitshiftCounter == 3) {
+						currentBaseWrite = (currentBaseWrite | 0x2);
+					}
+				
+				}
+				else if (temp[0] == '1' && temp[1] == '1') {
+					if(nextBitshiftCounter == 0) {
+						currentBaseWrite = (currentBaseWrite | 0x3) << nextBitshift[nextBitshiftCounter];
+						printf("basewrie should be 12 %d\n",currentBaseWrite );
+						printf("here 1\n");
+					}
+					if(nextBitshiftCounter == 1) {
+						currentBaseWrite = (currentBaseWrite | 0x3) << nextBitshift[nextBitshiftCounter];
+						printf("here 2\n");
+					}
+					if(nextBitshiftCounter == 2) {
+						currentBaseWrite = (currentBaseWrite | 0x3) << nextBitshift[nextBitshiftCounter];
+						printf("here 3\n");
+					}
+					if(nextBitshiftCounter == 3) {
+						currentBaseWrite = (currentBaseWrite | 0x3);
+					}	
+			
+				}
+
+				nextBitshiftCounter++;
+				if (nextBitshiftCounter == 4) {
+					printf("heree 2nd\n");
+					fputc(currentBaseWrite, out_file);
+					nextBitshiftCounter = 0;
+					currentBaseWrite = 0;
+					writtenPerfectly = 1;
+
+				} 
+				insideFlag = 1;
+
+			}
+			if (insideFlag != 1) read2++;
+		}
+		stringCounter = 0;
+		unsigned int moreShifts = 3 - nextBitshiftCounter;
+		printf("written perfecto is... %d and moreshiftttttssss is %d \n", writtenPerfectly, moreShifts);
+		if(lastBase == 1 && moreShifts != 0 && writtenPerfectly != 1) {
+			printf("last base for loop\n");
+			for (int i = 0; i < moreShifts; i++) {
+				currentBaseWrite = currentBaseWrite << 2;
+			}
+
+			fputc(currentBaseWrite, out_file);
+
+		}
+		else if (lastBase == 1 && moreShifts == 0 && writtenPerfectly != 1) {
+			fputc(currentBaseWrite, out_file);
+		}
+
+	}
 }
 
 void storePreviousString() {
@@ -288,6 +409,20 @@ void storePreviousString() {
 	*(previousString + intialCounter) = '\0';
 }
 
+unsigned long long int powerFuncD(int exponent) {
+
+	if (exponent < 0) return 4;
+	unsigned int base = 2;
+	unsigned long long int result = 1;
+	while (exponent != 0) {
+		result = result * base;
+		--exponent;
+	}
+
+	printf("returining result is %llu \n", result);
+	return result;
+}
+
 void Decode(FILE* in_file, FILE* out_file) {
 	currentBaseWrite = 0;
 	nextBitshiftCounter = 0;
@@ -295,7 +430,6 @@ void Decode(FILE* in_file, FILE* out_file) {
 	codeTableD *NewlistTail = NULL;
 	listHeadD = NewlistHead;
 	listTailD = NewlistTail;
-	printf("hello\n");
 	unsigned char base0[] = "00";
 	unsigned char base1[] = "01";
 	unsigned char base2[] = "10";
@@ -310,7 +444,6 @@ void Decode(FILE* in_file, FILE* out_file) {
 	addNodeD(base2, 2);
 	addNodeD(base3, 3);
 
-	printCodeTableD();
 
 	unsigned int numberOfBases = 0;
 
@@ -339,44 +472,140 @@ void Decode(FILE* in_file, FILE* out_file) {
 	printf("Number of bases %d\n", numberOfBases);
 
 	unsigned basesCounter = 0;
-	unsigned char outPut[5000];
-	unsigned int codeTableCounter = 3;
+	unsigned int codeTableCounter = 4;
 	unsigned int intialCounter = 0;
+
 	unsigned int currentCodeValue = 0;
-	unsigned int currentBase8bits = fgetc(in_file);
+	unsigned int currentBase8bits;
+
+    int check;
+    int remainder = 8;
+    int reading = 3;
+    int shiftingAmount;
 
 
+	unsigned int maskAmount = 0;
+	unsigned int tempBase = 0;
 
-	currentCodeValue = currentBase8bits >> 5;
-	printf("currentCodeValue is %d\n", currentCodeValue);
+	// previousString[0] = '1';
+	// previousString[1] = '0';
+	// previousString[2] = '1';
+	// previousString[3] = '1';
+	// previousString[4] = '1';
+	// previousString[5] = '0';
+	// previousString[6] = '1';
+	// previousString[7] = '1';
 
-	getCodeStringD(currentCodeValue);
-	printf("gotString is %s\n",gotString);
-	write2Bits(out_file);
 
-	storePreviousString();
+	// gotString[0] = '1';
+	// gotString[1] = '0';
+	// gotString[2] = '1';
+	// gotString[3] = '1';
+	// gotString[4] = '1';
+	// gotString[5] = '1';
+	// cPandCZD(previousString, gotString);
 
-
-
+	// justGotStringFlag = 0;
+	// write2Bits(out_file, 0);
+	unsigned int fGetFlag = 0;
+	unsigned int newShiftingAmountRight = 0;
+	unsigned int initilise = 1;
 	while(basesCounter != numberOfBases) {
-		
 
+		if (fGetFlag == 0) currentBase8bits = fgetc(in_file);
+		printf("currentbase*bits is..... %d \n", currentBase8bits);
+		if (codeTableCounter > 8 && codeTableCounter <= 16) reading = 4;
+		if (codeTableCounter > 16 && codeTableCounter <= 32) reading = 5;
+		if (codeTableCounter > 32 && codeTableCounter <= 64) reading = 6;
+		if (codeTableCounter > 64 && codeTableCounter <= 128) reading = 7;
+		if (codeTableCounter > 128 && codeTableCounter <= 256) reading = 8;
+		if (codeTableCounter > 256 && codeTableCounter <= 512) reading = 9;
+		if (codeTableCounter > 512 && codeTableCounter <= 1024) reading = 10;
+		if (codeTableCounter > 1024 && codeTableCounter <= 2048) reading = 11;
+		if (codeTableCounter > 2048 && codeTableCounter <= 4096) reading = 12;
+
+		shiftingAmount = remainder - reading; // 8 - 3
+
+		if (shiftingAmount > 0) {
+			printf("shifting amount is.. %d\n", shiftingAmount );
+			fGetFlag = 1;
+			maskAmount = powerFuncD(reading) - 1;
+			currentCodeValue = currentBase8bits >> shiftingAmount;
+			currentCodeValue = currentCodeValue & maskAmount;
+			remainder = remainder - reading; // 8 - 3 
+			printf("remainder is.. %d\n", remainder);
+		}
+		else if (shiftingAmount < 0) {
+			printf("am i here? in else if from shif < 0\n");
+			fGetFlag = 1;
+			maskAmount = powerFuncD(remainder) - 1;
+			tempBase = currentBase8bits & maskAmount;
+			tempBase = tempBase << abs(shiftingAmount);
+			currentBase8bits = fgetc(in_file);
+			remainder = 8;
+			remainder = 8 - abs(shiftingAmount); 
+			currentCodeValue = currentBase8bits >> remainder;
+			currentCodeValue = tempBase | currentCodeValue;
+		}
+
+		printf("code values are...%d\n", currentCodeValue);
+		/// int currentCodeValue = we get the code somehoh
+
+		check = getCodeStringD(currentCodeValue);
+		if (check == 1 && (basesCounter + 1) == numberOfBases) {
+			justGotStringFlag = 1;
+			write2Bits(out_file, 1);
+			break;
+		}
+		else if (check == 1) {
+			printf("should be here for first 1\n");
+			justGotStringFlag = 1;
+			write2Bits(out_file, 0);
+			if (initilise != 1) {
+				printf("in initliase bAD!!!!!\n");
+				cPandCZD(previousString, gotString);
+				addNodeD(concatenatedD, codeTableCounter);
+				codeTableCounter++;	
+			}
+			initilise = 0;
+		}
+		else if (check == 0 &&(basesCounter + 1) == numberOfBases){
+			justGotStringFlag = 0;
+			printf("from end of base?\n");
+			
+			cPandCZD(previousString, previousString);
+			write2Bits(out_file, 1);
+			break;				
+		}
+		else if (check == 0) {
+			printf("not from end of base?\n");
+			justGotStringFlag = 0;
+			cPandCZD(previousString, previousString);
+			addNodeD(concatenatedD, codeTableCounter);
+			codeTableCounter++;	
+			write2Bits(out_file, 0);
+		}
+		
+		storePreviousString();
 		basesCounter++;
 	}
-	freeListD(listHeadD);
 
+printCodeTableD();
+
+
+
+	freeListD(listHeadD);
 	for (int i = 0; i < 5000; i++) {
 		gotString[i] = '\0';
 		concatenatedD[i] = '\0';
 		previousString[i] = '\0';
 	}
 	temp[0] = '\0';
-	temp[1] - '\0';
+	temp[1] = '\0';
 	read2 = 0;
 	stringCounter = 0;
 	nextBitshiftCounter = 0;
 	currentBaseWrite = 0;
-
-
+	justGotStringFlag = 1;
 
 }

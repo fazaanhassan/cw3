@@ -526,7 +526,7 @@ void writeToFile(unsigned int *codeArray, unsigned int numberOfCodes, FILE *out_
 		unsigned int flagOfWritten = 0;
 		unsigned int z = 8;
 		unsigned int biggerMask = 0;
-
+		unsigned int moveFlag = 0;
 		for (int i = 0; i < numberOfCodes; i++) {
 			printf("pick %d\n",*(codeArray + i));
 		}
@@ -552,18 +552,117 @@ void writeToFile(unsigned int *codeArray, unsigned int numberOfCodes, FILE *out_
 				printf("masking amoutn is %d\n", maskingAmount);
 				baseValue = baseValue & maskingAmount;
 				biggerMask = totalWrittenDifference - 8;
-				if(biggerMask == 0 && writeTheseBits == 9) {
+				if (biggerMask == 2 && writeTheseBits == 9) {
 					fputc(baseValue, out_file);
 					baseValue = 0;
-					totalWritten = 9;
-					continue;
-				}
-				if(biggerMask == 0 && writeTheseBits == 10) {
+					totalWrittenDifference = 2;
+					moveFlag = 1;
+				}				
+				else if (biggerMask == 1 && writeTheseBits == 9) {
 					fputc(baseValue, out_file);
 					baseValue = 0;
-					totalWritten = 9;
-					continue;
+					totalWrittenDifference = 1;
+					moveFlag = 1;
 				}
+				else if(biggerMask == 0 && writeTheseBits == 9) {
+					fputc(baseValue, out_file);
+					baseValue = 0;
+					totalWrittenDifference = 0;
+					moveFlag = 1;
+					// continue;
+				}
+				if (biggerMask == 4 && writeTheseBits == 10) {
+					fputc(baseValue, out_file);
+					baseValue = 0;
+					totalWrittenDifference = 4;
+					moveFlag = 1;		
+				}
+				else if (biggerMask == 4 && writeTheseBits == 10) {
+					fputc(baseValue, out_file);
+					baseValue = 0;
+					totalWrittenDifference = 4;
+					moveFlag = 1;		
+				}
+				else if (biggerMask == 3 && writeTheseBits == 10) {
+					fputc(baseValue, out_file);
+					baseValue = 0;
+					totalWrittenDifference = 3;
+					moveFlag = 1;		
+				}				
+				else if (biggerMask == 2 && writeTheseBits == 10) {
+					fputc(baseValue, out_file);
+					baseValue = 0;
+					totalWrittenDifference = 2;
+					moveFlag = 1;		
+				}
+				else if (biggerMask == 1 && writeTheseBits == 10) {
+					fputc(baseValue, out_file);
+					baseValue = 0;
+					totalWrittenDifference = 1;
+					moveFlag = 1;		
+				}
+				else if (biggerMask == 0 && writeTheseBits == 10) {
+					fputc(baseValue, out_file);
+					baseValue = 0;
+					totalWrittenDifference = 0;
+					moveFlag = 1;		
+				}
+
+				if (biggerMask == 6 && writeTheseBits == 11) {
+					fputc(baseValue, out_file);
+					baseValue = 0;
+					totalWrittenDifference = 6;
+					moveFlag = 1;				
+				}
+				else if (biggerMask == 5 && writeTheseBits == 11) {
+					fputc(baseValue, out_file);
+					baseValue = 0;
+					totalWrittenDifference = 5;
+					moveFlag = 1;				
+				}
+				else if (biggerMask == 4 && writeTheseBits == 11) {
+					fputc(baseValue, out_file);
+					baseValue = 0;
+					totalWrittenDifference = 4;
+					moveFlag = 1;				
+				}
+				else if (biggerMask == 3 && writeTheseBits == 11) {
+					fputc(baseValue, out_file);
+					baseValue = 0;
+					totalWrittenDifference = 3;
+					moveFlag = 1;				
+				}
+				else if (biggerMask == 2 && writeTheseBits == 11) {
+					fputc(baseValue, out_file);
+					baseValue = 0;
+					totalWrittenDifference = 2;
+					moveFlag = 1;				
+				}
+				else if (biggerMask == 1 && writeTheseBits == 11) {
+					fputc(baseValue, out_file);
+					baseValue = 0;
+					totalWrittenDifference = 1;
+					moveFlag = 1;				
+				}
+				else if (biggerMask == 0 && writeTheseBits == 11) {
+					fputc(baseValue, out_file);
+					baseValue = 0;
+					totalWrittenDifference = 0;
+					moveFlag = 1;				
+				}
+
+
+
+
+				// if((writeTheseBits == 10 || writeTheseBits == 11 || writeTheseBits == 12) && totalWrittenDifference == 8) {
+				// 	fputc(baseValue, out_file);
+				// 	baseValue = 0;
+				// 	if(writeTheseBits == 11) totalWritten = 9;
+				// 	if(writeTheseBits == 10) totalWritten = 10;
+				// 	if(writeTheseBits == 11) totalWritten = 11;
+				// 	if(writeTheseBits == 12) totalWritten = 12;
+					
+				// }
 
 
 				totalWritten = totalWrittenDifference;
@@ -601,7 +700,9 @@ void writeToFile(unsigned int *codeArray, unsigned int numberOfCodes, FILE *out_
 			if (codeValueCounter > 512 && codeValueCounter <= 1024) writeTheseBits = 10;
 			if (codeValueCounter > 1024 && codeValueCounter <= 2048) writeTheseBits = 11;
 			if (codeValueCounter > 2048 && codeValueCounter <= 4096) writeTheseBits = 12;
-			baseValue = baseValue << writeTheseBits;
+
+			if (moveFlag != 1) baseValue = baseValue << writeTheseBits;
+			moveFlag = 0;
 			printf("base value is....... %d\n", baseValue );
 			totalWritten = totalWritten + writeTheseBits;
 			printf("writethsesbits is.... %d and totalwritten is %d \n", writeTheseBits, totalWritten);
