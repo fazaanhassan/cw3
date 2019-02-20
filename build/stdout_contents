@@ -1,2 +1,68 @@
-Invalid decoder input: .*
+Number of bases 6
+starting with checkBasesCounter is. 0
+currentbase*bits is..... 0 
+shifting amount is.. 5
+returining result is 8 
+remainder is.. 5
+code values are...0
+should behere first.. numberOfBases is 6
+First If basescounter is... 1
+First ifnumberOfBases is.. 6
+before comapre return numberOfBases is 6.. and checkBasesCounter is 1
+currentbase*bits is..... 0 
+shifting amount is.. 2
+returining result is 8 
+remainder is.. 2
+code values are...0
+should behere first.. numberOfBases is 6
+First If basescounter is... 2
+First ifnumberOfBases is.. 6
+before comapre return numberOfBases is 6.. and checkBasesCounter is 2
+in initliase bAD!!!!!
+currentbase*bits is..... 0 
+am i here? in else if from shiftingAmount is -1
+returining result is 4 
+code values are...1
+should behere first.. numberOfBases is 6
+First If basescounter is... 3
+First ifnumberOfBases is.. 6
+before comapre return numberOfBases is 6.. and checkBasesCounter is 3
+in initliase bAD!!!!!
+currentbase*bits is..... 132 
+shifting amount is.. 4
+returining result is 8 
+remainder is.. 4
+code values are...0
+should behere first.. numberOfBases is 6
+First If basescounter is... 4
+First ifnumberOfBases is.. 6
+hereeeeeeeeeeeeee
+before comapre return numberOfBases is 6.. and checkBasesCounter is 4
+in initliase bAD!!!!!
+currentbase*bits is..... 132 
+shifting amount is.. 1
+returining result is 8 
+remainder is.. 1
+code values are...2
+should behere first.. numberOfBases is 6
+First If basescounter is... 5
+First ifnumberOfBases is.. 6
+before comapre return numberOfBases is 6.. and checkBasesCounter is 5
+in initliase bAD!!!!!
+currentbase*bits is..... 132 
+am i here? in else if from shiftingAmount is -2
+returining result is 2 
+code values are...1
+should behere first.. numberOfBases is 6
+First If basescounter is... 6
+First ifnumberOfBases is.. 6
+before comapre return numberOfBases is 6.. and checkBasesCounter is 6
+in here????asdasdasdasdCode number: 0 Value: 00
+Code number: 1 Value: 01
+Code number: 2 Value: 10
+Code number: 3 Value: 11
+Code number: 4 Value: 0000
+Code number: 5 Value: 0001
+Code number: 6 Value: 0100
+Code number: 7 Value: 0010
 Decoding does not obtain original input

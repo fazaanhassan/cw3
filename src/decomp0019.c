@@ -186,6 +186,7 @@ unsigned int moreShifts = 0;
 unsigned int returnFlag = 0;
 // unsigned int checkBasesCounter = 0;
 unsigned int checkBasesCounter = 0;
+unsigned int totalBasesOutputCounter = 0;
 void write2Bits(FILE* out_file, unsigned int lastBase, unsigned int numberOfBases) {
 	unsigned int insideFlag = 0;
 	unsigned int writtenPerfectly = 0;
@@ -201,6 +202,7 @@ void write2Bits(FILE* out_file, unsigned int lastBase, unsigned int numberOfBase
 				read2 = 0;
 				// checkBasesCounter += 1;
 				checkBasesCounter += 1;
+				totalBasesOutputCounter += 1;
 				printf("First If basescounter is... %d\n", checkBasesCounter);
 				// printf("temp for gotString is... and checkBasesCounter is..%d and numberOfBases is..%d\n",temp, checkBasesCounter, numberOfBases);
 				printf("First ifnumberOfBases is.. %d\n", numberOfBases);
@@ -276,6 +278,10 @@ void write2Bits(FILE* out_file, unsigned int lastBase, unsigned int numberOfBase
 					currentBaseWrite = 0;
 					writtenPerfectly = 1;
 
+					if (checkBasesCounter == numberOfBases) {
+						returnFlag = 1;
+						return;
+					}
 				} 
 				insideFlag = 1;
 
@@ -296,15 +302,6 @@ void write2Bits(FILE* out_file, unsigned int lastBase, unsigned int numberOfBase
 		}
 
 		// if(moreShifts != 0 && writtenPerfectly != 1) {
-
-		// 	for (unsigned int i = 0; i < moreShifts; i++) {
-		// 		currentBaseWrite = currentBaseWrite << 2;
-		// 	}
-
-		// 	fputc(currentBaseWrite, out_file);
-
-		// }
-
 	}
 	else {
 		while (concatenatedD[stringCounter] != '\0') {
@@ -317,6 +314,7 @@ void write2Bits(FILE* out_file, unsigned int lastBase, unsigned int numberOfBase
 				read2 = 0;
 				// checkBasesCounter += 1;
 				checkBasesCounter += 1;
+				totalBasesOutputCounter += 1;
 				// checkBasesCounter = checkBasesCounter + 1;
 				printf("temp is... %s\n",temp);
 				if (temp[0] == '0' && temp[1] == '0') {
@@ -390,7 +388,10 @@ void write2Bits(FILE* out_file, unsigned int lastBase, unsigned int numberOfBase
 					nextBitshiftCounter = 0;
 					currentBaseWrite = 0;
 					writtenPerfectly = 1;
-
+					if (checkBasesCounter == numberOfBases) {
+						returnFlag = 1;
+						return;
+					}
 				} 
 				insideFlag = 1;
 
@@ -480,12 +481,13 @@ void Decode(FILE* in_file, FILE* out_file) {
 	buffer[1] = nextLsByte;
 	buffer[2] = thirdLsByte;
 	buffer[3] = msbyte;
+
 	//check if there are more bases then total bytes /2.
-	if (numberOfBases >= numberOfBytes) {
-		printf("Invalid decoder input: .*\n");
-		fputs("invalid input: .*", out_file);
-		return;
-	}
+	// if (numberOfBases >= numberOfBytes) {
+	// 	printf("Invalid decoder input: .*\n");
+	// 	fputs("invalid input: .*", out_file);
+	// 	return;
+	// }
 	fputc(buffer[0], out_file);
 	fputc(buffer[1], out_file);
 	fputc(buffer[2], out_file);
@@ -539,6 +541,7 @@ void Decode(FILE* in_file, FILE* out_file) {
 	currentBase8bits = fgetc(in_file);
 	unsigned int existsOrNot;
 
+
 	printf("starting with checkBasesCounter is. %d\n", checkBasesCounter);
 	while(1) {
 
@@ -575,6 +578,7 @@ void Decode(FILE* in_file, FILE* out_file) {
 			tempBase = currentBase8bits & maskAmount;
 			tempBase = tempBase << abs(shiftingAmount);
 			if ((currentBase8bits = fgetc(in_file)) != EOF) {
+
 			// currentBase8bits = fgetc(in_file);
 			remainder = 8;
 			remainder = 8 - abs(shiftingAmount); 
@@ -582,6 +586,7 @@ void Decode(FILE* in_file, FILE* out_file) {
 			currentCodeValue = tempBase | currentCodeValue;				
 			}
 			else {
+				if ((char)currentBase8bits==EOF && totalBasesOutputCounter<numberOfBases) printf("Invalid decoder input: .*\n");
 				printf("currentBaseWrite is %d and moreShifts is.. %d\n", currentBaseWrite, moreShifts);
 				printf("should be < 0 in break\n");
 				printf("checkBasesCounter is: %d ..... numberOfBases is.... %d\n", checkBasesCounter, numberOfBases);
@@ -653,5 +658,5 @@ printCodeTableD();
 	moreShifts = 0;
 	checkBasesCounter = 0;
 	returnFlag = 0;
-
+	totalBasesOutputCounter = 0;
 }
