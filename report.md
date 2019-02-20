@@ -1,5 +1,5 @@
 ## COMP0019 CW3 Grade Report
-Report for commit SHA: 337e896015083b08971e16d7ca6ee0f61923a898
+Report for commit SHA: 4c3cba5efe82d7bde7d44dd1292ea0679e45d34d
 
 ### Output
 
@@ -92,14 +92,38 @@ Report for commit SHA: 337e896015083b08971e16d7ca6ee0f61923a898
                     ^
     [ 21%] Building C object CMakeFiles/gene_encode.dir/src/decomp0019.c.o
     /home/user/src/decomp0019.c: In function 'write2Bits':
-    /home/user/src/decomp0019.c:387:22: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
-        for (int i = 0; i < moreShifts; i++) {
-                          ^
+    /home/user/src/decomp0019.c:290:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+        for (int i =0; i < moreShifts; i++) {
+                         ^
+    /home/user/src/decomp0019.c:404:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+        for (int i =0; i < moreShifts; i++) {
+                         ^
+    /home/user/src/decomp0019.c:191:15: warning: variable 'writtenPerfectly' set but not used [-Wunused-but-set-variable]
+      unsigned int writtenPerfectly = 0;
+                   ^
+    /home/user/src/decomp0019.c:189:46: warning: unused parameter 'lastBase' [-Wunused-parameter]
+     void write2Bits(FILE* out_file, unsigned int lastBase, unsigned int numberOfBases) {
+                                                  ^
     /home/user/src/decomp0019.c: In function 'Decode':
-    /home/user/src/decomp0019.c:511:15: warning: unused variable 'newShiftingAmountRight' [-Wunused-variable]
+    /home/user/src/decomp0019.c:577:44: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+        if ((currentBase8bits = fgetc(in_file)) != EOF) {
+                                                ^
+    /home/user/src/decomp0019.c:592:23: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+          for (int i =0; i < moreShifts; i++) {
+                           ^
+    /home/user/src/decomp0019.c:538:15: warning: unused variable 'totalCounter' [-Wunused-variable]
+      unsigned int totalCounter = 0;
+                   ^
+    /home/user/src/decomp0019.c:537:15: warning: unused variable 'totalPossibleCodesReadable' [-Wunused-variable]
+      unsigned int totalPossibleCodesReadable = (numberOfBases * 2) / 3;
+                   ^
+    /home/user/src/decomp0019.c:535:15: warning: unused variable 'newShiftingAmountRight' [-Wunused-variable]
       unsigned int newShiftingAmountRight = 0;
                    ^
-    /home/user/src/decomp0019.c:476:15: warning: unused variable 'intialCounter' [-Wunused-variable]
+    /home/user/src/decomp0019.c:534:15: warning: variable 'fGetFlag' set but not used [-Wunused-but-set-variable]
+      unsigned int fGetFlag = 0;
+                   ^
+    /home/user/src/decomp0019.c:499:15: warning: unused variable 'intialCounter' [-Wunused-variable]
       unsigned int intialCounter = 0;
                    ^
     [ 28%] Linking C static library libgene_encode.a
@@ -129,9 +153,7 @@ Report for commit SHA: 337e896015083b08971e16d7ca6ee0f61923a898
     testing encode for 16 sequences of size 2: OK
     testing decode for 16 sequences of size 2: OK
     testing encode for 64 sequences of size 3: OK
-    testing decode for 64 sequences of size 3: FAILED
-    	to repeat only this test run ./lzw_test --file ../test_data/all_bases_3 --test_index 0 --type decode
-    	to extract input for test run ./lzw_test --file ../test_data/all_bases_3 --test_index 0 --type decode --dump
+    testing decode for 64 sequences of size 3: OK
     testing encode for 256 sequences of size 4: OK
     testing decode for 256 sequences of size 4: FAILED
     	to repeat only this test run ./lzw_test --file ../test_data/all_bases_4 --test_index 0 --type decode
@@ -142,13 +164,15 @@ Report for commit SHA: 337e896015083b08971e16d7ca6ee0f61923a898
     testing decode for 4096 sequences of size 6: FAILED
     	to repeat only this test run ./lzw_test --file ../test_data/all_bases_6 --test_index 0 --type decode
     	to extract input for test run ./lzw_test --file ../test_data/all_bases_6 --test_index 0 --type decode --dump
-    Group one score: 9/12
+    Group one score: 10/12
     
     Test group two (pre-generated random sequences of size N):
     testing encode for sequence of size 1: OK
     testing decode for sequence of size 1: OK
     testing encode for sequence of size 4: OK
-    testing decode for sequence of size 4: OK
+    testing decode for sequence of size 4: FAILED
+    	to repeat only this test run ./lzw_test --file ../test_data/rnd_1 --test_index 0 --type decode
+    	to extract input for test run ./lzw_test --file ../test_data/rnd_1 --test_index 0 --type decode --dump
     testing encode for sequence of size 16: OK
     testing decode for sequence of size 16: FAILED
     	to repeat only this test run ./lzw_test --file ../test_data/rnd_2 --test_index 0 --type decode
@@ -177,14 +201,12 @@ Report for commit SHA: 337e896015083b08971e16d7ca6ee0f61923a898
     testing decode for sequence of size 16384: FAILED
     	to repeat only this test run ./lzw_test --file ../test_data/rnd_7 --test_index 0 --type decode
     	to extract input for test run ./lzw_test --file ../test_data/rnd_7 --test_index 0 --type decode --dump
-    Group two score: 8/16
+    Group two score: 7/16
     
     Test group three (invalid inputs):
     testing encode for invalid encoder inputs: OK
-    testing decode for invalid decoder inputs: FAILED
-    	to repeat only this test run ./lzw_test --file ../test_data/invalid_decoder_inputs --test_index 0 --type decode
-    	to extract input for test run ./lzw_test --file ../test_data/invalid_decoder_inputs --test_index 0 --type decode --dump
-    Group three score: 1/2
+    testing decode for invalid decoder inputs: OK
+    Group three score: 2/2
     
     [100%] Built target test-all
     
@@ -192,5 +214,5 @@ Report for commit SHA: 337e896015083b08971e16d7ca6ee0f61923a898
 
 ### Marking
 
-Total score: (9 / 12) * 35 + (8 / 16) * 35 + (1 / 2) * 30 = 59 / 100
+Total score: (10 / 12) * 35 + (7 / 16) * 35 + (2 / 2) * 30 = 74 / 100
 
