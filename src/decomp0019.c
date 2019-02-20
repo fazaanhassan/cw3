@@ -182,13 +182,15 @@ unsigned int stringCounter = 0;
 unsigned int currentBaseWrite = 0;
 unsigned int nextBitshiftCounter = 0;
 unsigned justGotStringFlag = 1;
-
-void write2Bits(FILE* out_file, unsigned int lastBase) {
+unsigned int moreShifts = 0;
+unsigned int returnFlag = 0;
+// unsigned int checkBasesCounter = 0;
+unsigned int checkBasesCounter = 0;
+void write2Bits(FILE* out_file, unsigned int lastBase, unsigned int numberOfBases) {
 	unsigned int insideFlag = 0;
 	unsigned int writtenPerfectly = 0;
 
 	if (justGotStringFlag == 1) {
-		printf("got string is %s\n", gotString );
 		while (gotString[stringCounter] != '\0') {
 			temp[read2] = gotString[stringCounter];
 			stringCounter++;
@@ -197,7 +199,11 @@ void write2Bits(FILE* out_file, unsigned int lastBase) {
 
 			if (read2 == 1) {
 				read2 = 0;
-				printf("temp for gotString is... %s\n",temp);
+				// checkBasesCounter += 1;
+				checkBasesCounter += 1;
+				printf("First If basescounter is... %d\n", checkBasesCounter);
+				// printf("temp for gotString is... and checkBasesCounter is..%d and numberOfBases is..%d\n",temp, checkBasesCounter, numberOfBases);
+				printf("First ifnumberOfBases is.. %d\n", numberOfBases);
 				if (temp[0] == '0' && temp[1] == '0') {
 					if(nextBitshiftCounter == 0) {
 						currentBaseWrite = (currentBaseWrite | 0x0) << nextBitshift[nextBitshiftCounter];
@@ -269,6 +275,7 @@ void write2Bits(FILE* out_file, unsigned int lastBase) {
 					nextBitshiftCounter = 0;
 					currentBaseWrite = 0;
 					writtenPerfectly = 1;
+
 				} 
 				insideFlag = 1;
 
@@ -276,20 +283,28 @@ void write2Bits(FILE* out_file, unsigned int lastBase) {
 			if (insideFlag != 1) read2++;
 		}
 		stringCounter = 0;
-		unsigned int moreShifts = 3 - nextBitshiftCounter;
-
-		if(lastBase == 1 && moreShifts != 0 && writtenPerfectly != 1) {
-
-			for (unsigned int i = 0; i < moreShifts; i++) {
+		moreShifts = 3 - nextBitshiftCounter;
+		printf("before comapre return numberOfBases is %d.. and checkBasesCounter is %d\n", numberOfBases, checkBasesCounter);
+		if (checkBasesCounter == numberOfBases) {
+			printf("in here????asdasdasdasd");
+			for (int i =0; i < moreShifts; i++) {
 				currentBaseWrite = currentBaseWrite << 2;
-			}
-
+				}
 			fputc(currentBaseWrite, out_file);
+			returnFlag = 1;
+			return;
+		}
 
-		}
-		else if (lastBase == 1 && moreShifts == 0 && writtenPerfectly != 1) {
-			fputc(currentBaseWrite, out_file);
-		}
+		// if(moreShifts != 0 && writtenPerfectly != 1) {
+
+		// 	for (unsigned int i = 0; i < moreShifts; i++) {
+		// 		currentBaseWrite = currentBaseWrite << 2;
+		// 	}
+
+		// 	fputc(currentBaseWrite, out_file);
+
+		// }
+
 	}
 	else {
 		while (concatenatedD[stringCounter] != '\0') {
@@ -300,6 +315,9 @@ void write2Bits(FILE* out_file, unsigned int lastBase) {
 
 			if (read2 == 1) {
 				read2 = 0;
+				// checkBasesCounter += 1;
+				checkBasesCounter += 1;
+				// checkBasesCounter = checkBasesCounter + 1;
 				printf("temp is... %s\n",temp);
 				if (temp[0] == '0' && temp[1] == '0') {
 					if(nextBitshiftCounter == 0) {
@@ -380,20 +398,17 @@ void write2Bits(FILE* out_file, unsigned int lastBase) {
 			if (insideFlag != 1) read2++;
 		}
 		stringCounter = 0;
-		unsigned int moreShifts = 3 - nextBitshiftCounter;
-		printf("written perfecto is... %d and moreshiftttttssss is %d \n", writtenPerfectly, moreShifts);
-		if(lastBase == 1 && moreShifts != 0 && writtenPerfectly != 1) {
-			printf("last base for loop\n");
-			for (int i = 0; i < moreShifts; i++) {
+		moreShifts = 3 - nextBitshiftCounter;
+
+		if (checkBasesCounter == numberOfBases) {
+			for (int i =0; i < moreShifts; i++) {
 				currentBaseWrite = currentBaseWrite << 2;
-			}
-
+				}
 			fputc(currentBaseWrite, out_file);
+			returnFlag = 1;
+			return;
+		}
 
-		}
-		else if (lastBase == 1 && moreShifts == 0 && writtenPerfectly != 1) {
-			fputc(currentBaseWrite, out_file);
-		}
 
 	}
 }
@@ -443,8 +458,11 @@ void Decode(FILE* in_file, FILE* out_file) {
 	addNodeD(base1, 1);
 	addNodeD(base2, 2);
 	addNodeD(base3, 3);
-
-
+	unsigned int numberOfBytes = 0;
+	while(fgetc(in_file) != EOF) {
+		numberOfBytes++;
+	}
+	rewind(in_file);
 	unsigned int numberOfBases = 0;
 
 	numberOfBases |= fgetc(in_file);
@@ -462,7 +480,12 @@ void Decode(FILE* in_file, FILE* out_file) {
 	buffer[1] = nextLsByte;
 	buffer[2] = thirdLsByte;
 	buffer[3] = msbyte;
-
+	//check if there are more bases then total bytes /2.
+	if (numberOfBases >= numberOfBytes) {
+		printf("Invalid decoder input: .*\n");
+		fputs("invalid input: .*", out_file);
+		return;
+	}
 	fputc(buffer[0], out_file);
 	fputc(buffer[1], out_file);
 	fputc(buffer[2], out_file);
@@ -507,12 +530,19 @@ void Decode(FILE* in_file, FILE* out_file) {
 
 	// justGotStringFlag = 0;
 	// write2Bits(out_file, 0);
+
 	unsigned int fGetFlag = 0;
 	unsigned int newShiftingAmountRight = 0;
 	unsigned int initilise = 1;
-	while(basesCounter != numberOfBases) {
+	unsigned int totalPossibleCodesReadable = (numberOfBases * 2) / 3;
+	unsigned int totalCounter = 0;
+	currentBase8bits = fgetc(in_file);
+	unsigned int existsOrNot;
 
-		if (fGetFlag == 0) currentBase8bits = fgetc(in_file);
+	printf("starting with checkBasesCounter is. %d\n", checkBasesCounter);
+	while(1) {
+
+		
 		printf("currentbase*bits is..... %d \n", currentBase8bits);
 		if (codeTableCounter > 8 && codeTableCounter <= 16) reading = 4;
 		if (codeTableCounter > 16 && codeTableCounter <= 32) reading = 5;
@@ -527,6 +557,9 @@ void Decode(FILE* in_file, FILE* out_file) {
 		shiftingAmount = remainder - reading; // 8 - 3
 
 		if (shiftingAmount > 0) {
+			// if (checkBasesCounter == numberOfBases) {
+			// 		break;
+			// 	}
 			printf("shifting amount is.. %d\n", shiftingAmount );
 			fGetFlag = 1;
 			maskAmount = powerFuncD(reading) - 1;
@@ -536,54 +569,64 @@ void Decode(FILE* in_file, FILE* out_file) {
 			printf("remainder is.. %d\n", remainder);
 		}
 		else if (shiftingAmount < 0) {
-			printf("am i here? in else if from shif < 0\n");
+			printf("am i here? in else if from shiftingAmount is %d\n", shiftingAmount);
 			fGetFlag = 1;
 			maskAmount = powerFuncD(remainder) - 1;
 			tempBase = currentBase8bits & maskAmount;
 			tempBase = tempBase << abs(shiftingAmount);
-			currentBase8bits = fgetc(in_file);
+			if ((currentBase8bits = fgetc(in_file)) != EOF) {
+			// currentBase8bits = fgetc(in_file);
 			remainder = 8;
 			remainder = 8 - abs(shiftingAmount); 
 			currentCodeValue = currentBase8bits >> remainder;
-			currentCodeValue = tempBase | currentCodeValue;
+			currentCodeValue = tempBase | currentCodeValue;				
+			}
+			else {
+				printf("currentBaseWrite is %d and moreShifts is.. %d\n", currentBaseWrite, moreShifts);
+				printf("should be < 0 in break\n");
+				printf("checkBasesCounter is: %d ..... numberOfBases is.... %d\n", checkBasesCounter, numberOfBases);
+				if (checkBasesCounter == numberOfBases) {
+					break;
+				}
+				else {
+					for (int i =0; i < moreShifts; i++) {
+					currentBaseWrite = currentBaseWrite << 2;
+					}
+					fputc(currentBaseWrite, out_file);
+					break;
+				}
+			}
+
 		}
 
 		printf("code values are...%d\n", currentCodeValue);
 		/// int currentCodeValue = we get the code somehoh
 
 		check = getCodeStringD(currentCodeValue);
-		if (check == 1 && (basesCounter + 1) == numberOfBases) {
+
+		if (check == 1) {
 			justGotStringFlag = 1;
-			write2Bits(out_file, 1);
-			break;
-		}
-		else if (check == 1) {
-			printf("should be here for first 1\n");
-			justGotStringFlag = 1;
-			write2Bits(out_file, 0);
+			printf("should behere first.. numberOfBases is %d\n", numberOfBases);
+			write2Bits(out_file, 0, numberOfBases);
+			if (returnFlag == 1) break;
 			if (initilise != 1) {
 				printf("in initliase bAD!!!!!\n");
 				cPandCZD(previousString, gotString);
-				addNodeD(concatenatedD, codeTableCounter);
+				existsOrNot = checkExistsD();
+				if (existsOrNot == 0) addNodeD(concatenatedD, codeTableCounter);
 				codeTableCounter++;	
 			}
 			initilise = 0;
-		}
-		else if (check == 0 &&(basesCounter + 1) == numberOfBases){
-			justGotStringFlag = 0;
-			printf("from end of base?\n");
-			
-			cPandCZD(previousString, previousString);
-			write2Bits(out_file, 1);
-			break;				
 		}
 		else if (check == 0) {
 			printf("not from end of base?\n");
 			justGotStringFlag = 0;
 			cPandCZD(previousString, previousString);
-			addNodeD(concatenatedD, codeTableCounter);
+			existsOrNot = checkExistsD();
+			if (existsOrNot == 0)addNodeD(concatenatedD, codeTableCounter);
 			codeTableCounter++;	
-			write2Bits(out_file, 0);
+			write2Bits(out_file, 0, numberOfBases);
+			if (returnFlag == 1) break;
 		}
 		
 		storePreviousString();
@@ -607,5 +650,8 @@ printCodeTableD();
 	nextBitshiftCounter = 0;
 	currentBaseWrite = 0;
 	justGotStringFlag = 1;
+	moreShifts = 0;
+	checkBasesCounter = 0;
+	returnFlag = 0;
 
 }
